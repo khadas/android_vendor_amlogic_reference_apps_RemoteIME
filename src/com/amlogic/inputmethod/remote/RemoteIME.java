@@ -274,7 +274,7 @@ public class RemoteIME extends InputMethodService {
             return false;
         }
         
-        if (mSkbContainer.hasFocus()) {
+        if (mSkbContainer!=null && mSkbContainer.hasFocus()) {
             Log.d(TAG, "processKeys: processChooseSoftKeys");
             if (processChooseSoftKeys(keyCode, realAction))
                 return true;
