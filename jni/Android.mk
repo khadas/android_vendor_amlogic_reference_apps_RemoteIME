@@ -28,5 +28,6 @@ LOCAL_LDLIBS += -lpthread
 LOCAL_MODULE := libjni_remoteime
 LOCAL_SHARED_LIBRARIES := libcutils libutils
 LOCAL_PRELINK_MODULE := false
+LOCAL_MODULE_TAGS := optional
 
 include $(BUILD_SHARED_LIBRARY)
