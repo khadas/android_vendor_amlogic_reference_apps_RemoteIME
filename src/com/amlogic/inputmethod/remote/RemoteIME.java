@@ -339,6 +339,8 @@ public class RemoteIME extends InputMethodService {
 
             SoftKey key = mSkbContainer.processFunctionKey(keyCode);
             if (key != null) {
+                if(key.getKeyCode()==KeyEvent.KEYCODE_ENTER)
+                    return false;
                 responseSoftKeyEvent(key);
                 return true;
             }
