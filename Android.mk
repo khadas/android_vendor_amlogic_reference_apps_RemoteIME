@@ -19,6 +19,8 @@ LOCAL_CERTIFICATE := shared
 # a raw file descriptor.
 LOCAL_AAPT_FLAGS := -0 .dat
 
+LOCAL_PROGUARD_ENABLED := disabled
+
 include $(BUILD_PACKAGE)
 
 MY_PATH := $(LOCAL_PATH)
