@@ -404,7 +404,7 @@ public class SkbContainer extends RelativeLayout implements OnTouchListener {
     public boolean handleBack(boolean realAction) {
         if (mPopupSkbShow) {
             if (!realAction) return true;
-
+           
             dismissPopupSkb();
             mDiscardEvent = true;
             return true;

@@ -274,7 +274,7 @@ public class RemoteIME extends InputMethodService {
             return false;
         }
         
-        if (mSkbContainer!=null && mSkbContainer.hasFocus()) {
+        if (mSkbContainer!=null && mSkbContainer.hasFocus() && isInputViewShown()) {
             Log.d(TAG, "processKeys: processChooseSoftKeys");
             if (processChooseSoftKeys(keyCode, realAction))
                 return true;
@@ -401,6 +401,7 @@ public class RemoteIME extends InputMethodService {
         // Back key is used to dismiss all popup UI in a soft keyboard.
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             if (isInputViewShown()) {
+                mSkbContainer.clearKeyFocus();
                 if (mSkbContainer.handleBack(realAction)) return true;
             }
         }
@@ -459,11 +460,11 @@ public class RemoteIME extends InputMethodService {
                 }
                 return true;
             }
-            if (keyCode == KeyEvent.KEYCODE_ENTER) {
+       /*     if (keyCode == KeyEvent.KEYCODE_ENTER) {
                 if (!realAction) return true;
                 sendKeyChar('\n');
                 return true;
-            }
+            }*/
             if (keyCode == KeyEvent.KEYCODE_SPACE) {
                 if (!realAction) return true;
                 sendKeyChar(' ');
@@ -491,10 +492,10 @@ public class RemoteIME extends InputMethodService {
                 getCurrentInputConnection().deleteSurroundingText(1, 0);
             }
             return true;
-        } else if (keyCode == KeyEvent.KEYCODE_ENTER) {
+    /*    } else if (keyCode == KeyEvent.KEYCODE_ENTER) {
             if (!realAction) return true;
             sendKeyChar('\n');
-            return true;
+            return true;*/
         } else if (keyCode == KeyEvent.KEYCODE_ALT_LEFT
                 || keyCode == KeyEvent.KEYCODE_ALT_RIGHT
                 || keyCode == KeyEvent.KEYCODE_SHIFT_LEFT
