@@ -22,9 +22,11 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.res.Configuration;
 import android.inputmethodservice.InputMethodService;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.RemoteException;
@@ -159,6 +161,10 @@ public class RemoteIME extends InputMethodService {
      * result, etc.
      */
     private DecodingInfo mDecInfo = new DecodingInfo();
+    
+    private TextUpdateReceiver text_receiver;//added by Linyu Bao,2011-03-10
+    private static final String TEXT_UPDATE_BROAD = "com.skyworth.controlservice.updatetext";//added by Linyu Bao,2011-03-10
+    private static final String UPDATE_TEXT = "update_text";//added by Linyu Bao,2011-03-10
 
     /**
      * For English input.
@@ -2227,4 +2233,48 @@ public class RemoteIME extends InputMethodService {
             return mFixedLen;
         }
     }
+    
+
+    private int chineseNumber(String value) {//added by Linyu Bao,2011-03-10
+        int number = 0;
+        for (int i = 0; i < value.length(); i++) {
+            if ((int) value.charAt(i) > 256) {
+                number++;
+            }
+        }
+        return number;
+    }
+
+    private void register_text_broadcast() {//added by Linyu Bao,2011-03-10
+        text_receiver = new TextUpdateReceiver();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(TEXT_UPDATE_BROAD);
+        this.registerReceiver(text_receiver, filter);
+    }
+
+    class TextUpdateReceiver extends BroadcastReceiver {//added by Linyu Bao,2011-03-10
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.d(TAG, "intent="+intent);
+            if(intent==null)
+                return;
+            String action = intent.getAction();
+            Log.d(TAG, "action="+action);
+            if (TEXT_UPDATE_BROAD.equals(action)) {
+                Bundle bundle = intent.getExtras();
+                if (bundle != null) {
+                    String text = bundle.getString(UPDATE_TEXT);
+                    Log.d(TAG, "phone str: "+text);
+                    if (null != text && !text.equals("")) {
+                        InputConnection ic = getCurrentInputConnection();
+                        int number = chineseNumber(text);
+                        String textAll = text.substring(0, text.length() - 2
+                                * number);
+                        ic.setComposingText(textAll, textAll.length());
+                    }
+                }
+            }
+        }
+
+    }    
 }
