@@ -162,9 +162,9 @@ public class RemoteIME extends InputMethodService {
      */
     private DecodingInfo mDecInfo = new DecodingInfo();
     
-    private TextUpdateReceiver text_receiver;//added by Linyu Bao,2011-03-10
-    private static final String TEXT_UPDATE_BROAD = "com.skyworth.controlservice.updatetext";//added by Linyu Bao,2011-03-10
-    private static final String UPDATE_TEXT = "update_text";//added by Linyu Bao,2011-03-10
+ //   private TextUpdateReceiver text_receiver;//added by Linyu Bao,2011-03-10
+ //   private static final String TEXT_UPDATE_BROAD = "com.skyworth.controlservice.updatetext";//added by Linyu Bao,2011-03-10
+ //   private static final String UPDATE_TEXT = "update_text";//added by Linyu Bao,2011-03-10
 
     /**
      * For English input.
@@ -2235,7 +2235,7 @@ public class RemoteIME extends InputMethodService {
     }
     
 
-    private int chineseNumber(String value) {//added by Linyu Bao,2011-03-10
+ /*   private int chineseNumber(String value) {//added by Linyu Bao,2011-03-10
         int number = 0;
         for (int i = 0; i < value.length(); i++) {
             if ((int) value.charAt(i) > 256) {
@@ -2267,14 +2267,15 @@ public class RemoteIME extends InputMethodService {
                     Log.d(TAG, "phone str: "+text);
                     if (null != text && !text.equals("")) {
                         InputConnection ic = getCurrentInputConnection();
-                        int number = chineseNumber(text);
-                        String textAll = text.substring(0, text.length() - 2
-                                * number);
-                        ic.setComposingText(textAll, textAll.length());
+                //        int number = chineseNumber(text);
+                //        String textAll = text.substring(0, text.length() - 2
+                //                * number);
+                //        ic.setComposingText(textAll, textAll.length());
+                        ic.setComposingText(text, text.length());
                     }
                 }
             }
         }
 
-    }    
+    }    */
 }
