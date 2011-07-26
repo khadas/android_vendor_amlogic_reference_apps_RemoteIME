@@ -30,6 +30,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.RemoteException;
+import android.os.SystemProperties;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Gravity;
@@ -1225,6 +1226,9 @@ public class RemoteIME extends InputMethodService {
         updateIcon(mInputModeSwitcher.requestInputWithSkb(editorInfo));
         resetToIdleState(false);
         mSkbContainer.updateInputMode();
+        if (SystemProperties.get("ro.product.device", "m1ref").equals("m1ref")){
+            mSkbContainer.setPadding(0, 0, 0, 180);
+        }
         setCandidatesViewShown(false);
         mSkbContainer.requestFocus();
         mSkbContainer.clearKeyFocus();

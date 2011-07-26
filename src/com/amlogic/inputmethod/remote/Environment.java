@@ -18,8 +18,11 @@ package com.amlogic.inputmethod.remote;
 
 import android.content.Context;
 import android.content.res.Configuration;
+import android.os.SystemProperties;
 import android.view.Display;
+import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
 
 /**
  * Global environment configurations for showing soft keyboard and candidate
@@ -116,11 +119,17 @@ public class Environment {
 
     public void onConfigurationChanged(Configuration newConfig, Context context) {
         if (mConfig.orientation != newConfig.orientation) {
-            WindowManager wm = (WindowManager) context
-                    .getSystemService(Context.WINDOW_SERVICE);
-            Display d = wm.getDefaultDisplay();
-            mScreenWidth = d.getWidth();
-            mScreenHeight = d.getHeight();
+            if (SystemProperties.get("ro.product.device", "m1ref").equals("m1ref")){
+                mScreenWidth = 1280;
+                mScreenHeight = 720;
+            }
+            else {
+                WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+                Display d = wm.getDefaultDisplay();
+                mScreenWidth = d.getWidth();
+                mScreenHeight = d.getHeight();
+            }
+
 
             int scale;
             if (mScreenHeight > mScreenWidth) {

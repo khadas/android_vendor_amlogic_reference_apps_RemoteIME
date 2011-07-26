@@ -421,7 +421,7 @@ public class SkbContainer extends RelativeLayout implements OnTouchListener {
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         Environment env = Environment.getInstance();
         int measuredWidth = env.getScreenWidth();
-        int measuredHeight = getPaddingTop();
+        int measuredHeight = getPaddingTop() + getPaddingBottom();
         measuredHeight += env.getSkbHeight();
         widthMeasureSpec = MeasureSpec.makeMeasureSpec(measuredWidth,
                 MeasureSpec.EXACTLY);
