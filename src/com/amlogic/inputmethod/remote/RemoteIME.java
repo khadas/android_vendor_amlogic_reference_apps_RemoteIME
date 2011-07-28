@@ -30,7 +30,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.RemoteException;
-import android.os.SystemProperties;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Gravity;
@@ -1223,23 +1222,9 @@ public class RemoteIME extends InputMethodService {
                     + String.valueOf(editorInfo.inputType) + " Restarting:"
                     + String.valueOf(restarting));
         }
-        onConfigureWindow(getWindow().getWindow(), false, false);
-        mEnvironment.onConfigurationChanged(getResources().getConfiguration(),this);
-        mSkbContainer.updateSkbLayout();
         updateIcon(mInputModeSwitcher.requestInputWithSkb(editorInfo));
         resetToIdleState(false);
         mSkbContainer.updateInputMode();
-        
-        Log.d("InputMethodService", 
-            "onStartInputView: isM1 = "+SystemProperties.get("ro.product.device", "m1ref").equals("m1ref")
-            + ", is720p = "+Environment.is720P());
-        
-        if (SystemProperties.get("ro.product.device", "m1ref").equals("m1ref")
-            && Environment.is720P()){
-            mSkbContainer.setPadding(0, 0, 0, 180);
-        }
-        else
-            mSkbContainer.setPadding(0, 0, 0, 0);
         setCandidatesViewShown(false);
         mSkbContainer.requestFocus();
         mSkbContainer.clearKeyFocus();
