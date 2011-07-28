@@ -401,9 +401,9 @@ public class CandidateView extends View {
         mFootnotePaint.setTextSize(textSize);
         mFmiFootnote = mFootnotePaint.getFontMetricsInt();
 
-        // When the size is changed, the first page will be displayed.
-        mPageNo = 0;
-        mActiveCandInPage = 0;
+        // When the size is changed, the first page will be displayed.      
+  //      mPageNo = 0;
+  //      mActiveCandInPage = 0;
     }
 
     private boolean calculatePage(int pageNo) {
