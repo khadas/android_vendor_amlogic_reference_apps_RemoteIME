@@ -16,9 +16,15 @@
 
 package com.amlogic.inputmethod.remote;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.SystemProperties;
+import android.util.Log;
 import android.view.Display;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -118,8 +124,12 @@ public class Environment {
     }
 
     public void onConfigurationChanged(Configuration newConfig, Context context) {
-        if (mConfig.orientation != newConfig.orientation) {
-            if (SystemProperties.get("ro.product.device", "m1ref").equals("m1ref")){
+    //    if (mConfig.orientation != newConfig.orientation) {
+            Log.d("InputMethodService", 
+                "onConfigurationChange: isM1 = "+SystemProperties.get("ro.product.device", "m1ref").equals("m1ref")
+                + ", is720p = "+is720P());
+            
+            if (SystemProperties.get("ro.product.device", "m1ref").equals("m1ref") && is720P()){
                 mScreenWidth = 1280;
                 mScreenHeight = 720;
             }
@@ -147,7 +157,7 @@ public class Environment {
             mFunctionBalloonTextSize = (int) (scale * FUNCTION_BALLOON_TEXT_SIZE_RATIO);
             mKeyBalloonWidthPlus = (int) (scale * KEY_BALLOON_WIDTH_PLUS_RATIO);
             mKeyBalloonHeightPlus = (int) (scale * KEY_BALLOON_HEIGHT_PLUS_RATIO);
-        }
+  //      }
 
         mConfig.updateFrom(newConfig);
     }
@@ -226,5 +236,18 @@ public class Environment {
 
     public boolean needDebug() {
         return mDebug;
+    }
+    
+    public static boolean is720P() {
+        try {
+            File f = new File("/sys/class/display/mode");
+            BufferedReader buf = new BufferedReader(new FileReader(f) );
+            String str = buf.readLine();
+            buf.close();
+            return "720p".equals(str);
+        } catch (IOException e){
+            e.printStackTrace();
+            } 
+        return false;
     }
 }

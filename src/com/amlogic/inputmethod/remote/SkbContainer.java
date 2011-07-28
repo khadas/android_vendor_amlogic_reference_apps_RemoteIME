@@ -266,7 +266,7 @@ public class SkbContainer extends RelativeLayout implements OnTouchListener {
         return;
     }
 
-    private void updateSkbLayout() {
+    public void updateSkbLayout() {
         int screenWidth = mEnvironment.getScreenWidth();
         int keyHeight = mEnvironment.getKeyHeight();
         int skbHeight = mEnvironment.getSkbHeight();
