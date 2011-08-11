@@ -9,7 +9,7 @@ LOCAL_SRC_FILES := \
 
 LOCAL_PACKAGE_NAME := RemoteIME
 
-LOCAL_JNI_SHARED_LIBRARIES := libjni_remoteime
+LOCAL_REQUIRED_MODULES := libjni_remoteime
 
 LOCAL_STATIC_JAVA_LIBRARIES := com.amlogic.inputmethod.remote.lib
 
@@ -22,8 +22,4 @@ LOCAL_AAPT_FLAGS := -0 .dat
 LOCAL_PROGUARD_ENABLED := disabled
 
 include $(BUILD_PACKAGE)
-
-MY_PATH := $(LOCAL_PATH)
-
-include $(MY_PATH)/jni/Android.mk
-include $(MY_PATH)/lib/Android.mk
+include $(call all-makefiles-under,$(LOCAL_PATH))
