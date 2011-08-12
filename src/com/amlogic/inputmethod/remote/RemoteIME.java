@@ -170,6 +170,8 @@ public class RemoteIME extends InputMethodService {
      * For English input.
      */
     private EnglishInputProcessor mImEn;    
+    
+    private Boolean mEnterEnabled;
 
     // receive ringer mode changes
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
@@ -186,6 +188,8 @@ public class RemoteIME extends InputMethodService {
             Log.d(TAG, "onCreate.");
         }
         super.onCreate();
+        
+        mEnterEnabled = getBaseContext().getResources().getBoolean(R.bool.is_enableEnter);
 
         startPinyinDecoderService();
         mImEn = new EnglishInputProcessor();
@@ -339,14 +343,13 @@ public class RemoteIME extends InputMethodService {
 
     private boolean processChooseSoftKeys(int keyCode, boolean realAction) {
         Log.d(TAG, "ChooseSoftKeys: " + keyCode);
-        if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER
-                || keyCode == KeyEvent.KEYCODE_ENTER) {
+        if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER) {
             if (!realAction) return true;
 
             SoftKey key = mSkbContainer.processFunctionKey(keyCode);
             if (key != null) {
-                if(key.getKeyCode()==KeyEvent.KEYCODE_ENTER)
-                    return false;
+      //          if(key.getKeyCode()==KeyEvent.KEYCODE_ENTER)
+      //              return false;
                 responseSoftKeyEvent(key);
                 return true;
             }
@@ -466,11 +469,11 @@ public class RemoteIME extends InputMethodService {
                 }
                 return true;
             }
-       /*     if (keyCode == KeyEvent.KEYCODE_ENTER) {
+            if (keyCode == KeyEvent.KEYCODE_ENTER) {
                 if (!realAction) return true;
                 sendKeyChar('\n');
                 return true;
-            }*/
+            }
             if (keyCode == KeyEvent.KEYCODE_SPACE) {
                 if (!realAction) return true;
                 sendKeyChar(' ');
@@ -498,10 +501,10 @@ public class RemoteIME extends InputMethodService {
                 getCurrentInputConnection().deleteSurroundingText(1, 0);
             }
             return true;
-    /*    } else if (keyCode == KeyEvent.KEYCODE_ENTER) {
+        } else if (keyCode == KeyEvent.KEYCODE_ENTER) {
             if (!realAction) return true;
             sendKeyChar('\n');
-            return true;*/
+            return true;
         } else if (keyCode == KeyEvent.KEYCODE_ALT_LEFT
                 || keyCode == KeyEvent.KEYCODE_ALT_RIGHT
                 || keyCode == KeyEvent.KEYCODE_SHIFT_LEFT
@@ -608,7 +611,7 @@ public class RemoteIME extends InputMethodService {
                 }
             }
             return true;
-     /*   } else if (keyCode == KeyEvent.KEYCODE_ENTER) {
+        } else if (keyCode == KeyEvent.KEYCODE_ENTER) {
             if (!realAction) return true;
             if (mInputModeSwitcher.isEnterNoramlState()) {
                 commitResultText(mDecInfo.getOrigianlSplStr().toString());
@@ -620,10 +623,9 @@ public class RemoteIME extends InputMethodService {
                 sendKeyChar('\n');
                 resetToIdleState(false);               
             }
-            return true;*/
+            return true;
         } else if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER
-                || keyCode == KeyEvent.KEYCODE_SPACE
-                || keyCode == KeyEvent.KEYCODE_ENTER) {
+                || keyCode == KeyEvent.KEYCODE_SPACE) {
             if (!realAction) return true;
             chooseCandidate(-1);
             return true;
@@ -693,12 +695,11 @@ public class RemoteIME extends InputMethodService {
                     chooseAndUpdate(activePos);
                 }
             }
-    /*    } else if (keyCode == KeyEvent.KEYCODE_ENTER) {
+        } else if (keyCode == KeyEvent.KEYCODE_ENTER) {
             sendKeyChar('\n');
-            resetToIdleState(false);*/
+            resetToIdleState(false);
         } else if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER
-                || keyCode == KeyEvent.KEYCODE_SPACE
-                || keyCode == KeyEvent.KEYCODE_ENTER) {
+                || keyCode == KeyEvent.KEYCODE_SPACE) {
             chooseCandidate(-1);
         }
 
@@ -742,9 +743,7 @@ public class RemoteIME extends InputMethodService {
         } else if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT
                 || keyCode == KeyEvent.KEYCODE_DPAD_RIGHT) {
             mComposingView.moveCursor(keyCode);
-        } else if ((keyCode == KeyEvent.KEYCODE_ENTER && mInputModeSwitcher
-                .isEnterNoramlState())
-                || keyCode == KeyEvent.KEYCODE_DPAD_CENTER
+        } else if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER
                 || keyCode == KeyEvent.KEYCODE_SPACE) {
             if (ComposingView.ComposingStatus.SHOW_STRING_LOWERCASE == cmpsvStatus) {
                 String str = mDecInfo.getOrigianlSplStr().toString();

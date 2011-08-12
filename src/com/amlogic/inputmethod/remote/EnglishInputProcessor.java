@@ -63,8 +63,8 @@ public class EnglishInputProcessor {
                 if (realAction)  {
                     inputContext.deleteSurroundingText(1, 0);
                 }
-       /*     } else if (KeyEvent.KEYCODE_ENTER == keyCode) {
-                insert = "\n";*/
+            } else if (KeyEvent.KEYCODE_ENTER == keyCode) {
+                insert = "\n";
             } else if (KeyEvent.KEYCODE_SPACE == keyCode) {
                 insert = " ";
             } else {
