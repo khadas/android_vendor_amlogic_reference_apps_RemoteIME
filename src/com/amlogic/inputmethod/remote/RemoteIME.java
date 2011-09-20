@@ -284,6 +284,10 @@ public class RemoteIME extends InputMethodService {
             return false;
         }
         
+        if (mInputModeSwitcher.isChineseTextWithHkb()) {
+            return false;
+        }
+        
         if (mSkbContainer!=null && mSkbContainer.hasFocus() && isInputViewShown()) {
             Log.d(TAG, "processKeys: processChooseSoftKeys");
             if (processChooseSoftKeys(keyCode, realAction))
