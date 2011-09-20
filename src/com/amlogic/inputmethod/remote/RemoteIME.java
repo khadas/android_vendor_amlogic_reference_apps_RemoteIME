@@ -337,8 +337,10 @@ public class RemoteIME extends InputMethodService {
                         realAction);
             }
         } else {
-            if (0 != keyChar && realAction) {
-                commitResultText(String.valueOf((char) keyChar));
+            if (0 != keyChar) {
+                if(realAction)
+                    commitResultText(String.valueOf((char) keyChar));
+                return true;
             }
         }
 
