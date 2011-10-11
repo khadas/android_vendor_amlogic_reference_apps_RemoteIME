@@ -14,8 +14,8 @@
      limitations under the License.
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <string name="ime_name">Remote controller input method</string>
-    <string name="ime_settings_activity_name">Remote controller input method settings</string>
+    <string name="ime_name">遙控器輸入法</string>
+    <string name="ime_settings_activity_name">遙控器輸入法設置</string>
     <!-- version = apk(java) + ime engine + sys dict + [hotlist (TBD)] -->
     <string name="version">1.0.0</string>
 
@@ -45,17 +45,17 @@
     <string name="setting_switch_key">setting_switch_key</string>
     <string name="setting_advanced_key">setting_advanced_key</string>
 
-	<string name="setting">Remote controller input method settings</string>
-    <string name="setting_sound_key_title">Sound feedback</string>
-    <string name="setting_vibrate_title">Vibrate when typing</string>
-    <string name="setting_prediction_title">Input prediction</string>
-    <string name="setting_switch_title">Chinese/English switch</string>
+	<string name="setting">遙控器輸入法設置</string>
+    <string name="setting_sound_key_title">按鍵聲音</string>
+    <string name="setting_vibrate_title">按鍵震動</string>
+    <string name="setting_prediction_title">聯想輸入</string>
+    <string name="setting_switch_title">中英文切換</string>
     <string name="setting_switch_shift_space_title">Shift-space</string>
 
-    <string name="setting_enabled">Enabled</string>
-    <string name="setting_disabled">Disabled</string>
+    <string name="setting_enabled">開啟</string>
+    <string name="setting_disabled">關閉</string>
 
-    <string name="setting_others">Other settings</string>
-    <string name="setting_others_summary">Dictionary synchronization</string>
+    <string name="setting_others">其它設置</string>
+    <string name="setting_others_summary">詞典同步等</string>
 
 </resources>
