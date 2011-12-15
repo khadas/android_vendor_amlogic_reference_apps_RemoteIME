@@ -239,7 +239,10 @@ public class RemoteIME extends InputMethodService {
         if (null != mCandidatesBalloon) {
             mCandidatesBalloon.dismiss();
         }
-        super.onConfigurationChanged(newConfig);
+        
+        if(newConfig.diff(env.getConfiguration()) != 0)
+            super.onConfigurationChanged(newConfig);
+        
         resetToIdleState(false);
     }
 
