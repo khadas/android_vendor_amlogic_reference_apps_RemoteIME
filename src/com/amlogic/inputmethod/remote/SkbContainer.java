@@ -44,7 +44,15 @@ public class SkbContainer extends RelativeLayout implements OnTouchListener {
      * simple bias correction. If the input method runs on emulator, no bias
      * correction will be used.
      */
-    private static final int Y_BIAS_CORRECTION = -10;
+    private static final int Y_BIAS_CORRECTION = 10;
+	
+    /**
+     * For finger touch, user tends to press the right part of the target key,
+     * or he/she even presses the area out of it, so it is necessary to make a
+     * simple bias correction. If the input method runs on emulator, no bias
+     * correction will be used.
+     */
+    private static final int X_BIAS_CORRECTION = 10;
 
     /**
      * Used to skip these move events whose position is too close to the
@@ -146,6 +154,13 @@ public class SkbContainer extends RelativeLayout implements OnTouchListener {
     private int mYBiasCorrection = 0;
 
     /**
+     * For finger touch, user tends to press the bottom part of the target key,
+     * or he/she even presses the area out of it, so it is necessary to make a
+     * simple bias correction in x.
+     */
+    private int mXBiasCorrection = 0;
+
+    /**
      * The x coordination of the last touch event.
      */
     private int mXLast;
@@ -195,8 +210,10 @@ public class SkbContainer extends RelativeLayout implements OnTouchListener {
         // If it runs on an emulator, no bias correction
         if ("1".equals(SystemProperties.get("ro.kernel.qemu"))) {
             mYBiasCorrection = 0;
+            mYBiasCorrection = 0;
         } else {
             mYBiasCorrection = Y_BIAS_CORRECTION;
+            mXBiasCorrection = X_BIAS_CORRECTION;
         }
         mBalloonPopup = new BalloonHint(context, this, MeasureSpec.AT_MOST);
         if (POPUPWINDOW_FOR_PRESSED_UI) {
@@ -443,6 +460,7 @@ public class SkbContainer extends RelativeLayout implements OnTouchListener {
         int y = (int) event.getY();
         // Bias correction
         y = y + mYBiasCorrection;
+        x = x + mXBiasCorrection;
 
         // Ignore short-distance movement event to get better performance.
         if (event.getAction() == MotionEvent.ACTION_MOVE) {
