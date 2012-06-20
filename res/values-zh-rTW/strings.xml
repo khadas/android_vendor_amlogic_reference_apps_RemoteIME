@@ -58,4 +58,10 @@
     <string name="setting_others">其它設置</string>
     <string name="setting_others_summary">詞典同步等</string>
 
+    <string name="toggle_enter_go_label">去往</string>
+    <string name="toggle_enter_send_label">發送</string>
+    <string name="toggle_enter_next_label">下一個</string>
+    <string name="toggle_enter_done_label">完成</string>
+    <string name="toggle_en_label">英 文</string>
+    <string name="toggle_cn_label">中 文</string>
 </resources>

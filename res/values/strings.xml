@@ -58,4 +58,10 @@
     <string name="setting_others">Other settings</string>
     <string name="setting_others_summary">Dictionary synchronization</string>
 
+    <string name="toggle_enter_go_label">Go</string>
+    <string name="toggle_enter_send_label">Send</string>
+    <string name="toggle_enter_next_label">Next</string>
+    <string name="toggle_enter_done_label">Done</string>
+    <string name="toggle_en_label">English</string>
+    <string name="toggle_cn_label">Chinese</string>
 </resources>
