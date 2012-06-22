@@ -44,7 +44,7 @@ public class SkbContainer extends RelativeLayout implements OnTouchListener {
      * simple bias correction. If the input method runs on emulator, no bias
      * correction will be used.
      */
-    private static final int Y_BIAS_CORRECTION = 10;
+    private static final int Y_BIAS_CORRECTION = 5;
 	
     /**
      * For finger touch, user tends to press the right part of the target key,
@@ -52,7 +52,7 @@ public class SkbContainer extends RelativeLayout implements OnTouchListener {
      * simple bias correction. If the input method runs on emulator, no bias
      * correction will be used.
      */
-    private static final int X_BIAS_CORRECTION = 10;
+    private static final int X_BIAS_CORRECTION = 5;
 
     /**
      * Used to skip these move events whose position is too close to the
