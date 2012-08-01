@@ -26,7 +26,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Paint.FontMetricsInt;
 import android.graphics.drawable.Drawable;
-import android.os.Vibrator;
+/*import android.os.Vibrator;*/
 import android.util.AttributeSet;
 import android.view.View;
 
