@@ -173,6 +173,7 @@ public class RemoteIME extends InputMethodService {
     
     private Boolean mEnterEnabled;
 
+    private Boolean mShiftTag = false;
     // receive ringer mode changes
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
@@ -301,6 +302,9 @@ public class RemoteIME extends InputMethodService {
             return true;
         }
 
+        if (!realAction && keyCode == KeyEvent.KEYCODE_SHIFT_LEFT){
+            mShiftTag = true;
+        }
         int keyChar = 0;
         if (keyCode >= KeyEvent.KEYCODE_A && keyCode <= KeyEvent.KEYCODE_Z) {
             keyChar = keyCode - KeyEvent.KEYCODE_A + 'a';
@@ -316,8 +320,14 @@ public class RemoteIME extends InputMethodService {
         } else if (keyCode == KeyEvent.KEYCODE_APOSTROPHE) {
             keyChar = '\'';
         }
+        if (mShiftTag) {
+            keyChar = 0;
+        }
 
-
+        if (realAction && keyCode == KeyEvent.KEYCODE_SHIFT_LEFT)
+        {
+            mShiftTag = false;
+        }
         if (mInputModeSwitcher.isEnglishWithSkb()) {
             Log.d(TAG, "processKeys: isEnglishWithSkb");
             return mImEn.processKey(getCurrentInputConnection(), event,
