@@ -1337,7 +1337,9 @@ public class RemoteIME extends InputMethodService {
                             launchSettings();
                             break;
                         case 1:
-                            InputMethodManager.getInstance(RemoteIME.this)
+                            //InputMethodManager.getInstance(RemoteIME.this)
+                            //        .showInputMethodPicker();
+                            InputMethodManager.getInstance()
                                     .showInputMethodPicker();
                             break;
                         }

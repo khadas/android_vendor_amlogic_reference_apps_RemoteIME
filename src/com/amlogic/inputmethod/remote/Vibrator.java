@@ -68,11 +68,12 @@ public class Vibrator
             Log.w(TAG, "Failed to vibrate; no vibrator service.");
             return;
         }
+        /*
         try {
             mService.vibrate(milliseconds, mToken);
         } catch (RemoteException e) {
             Log.w(TAG, "Failed to vibrate.", e);
-        }
+        }*/
     }
 
     /**
@@ -103,11 +104,12 @@ public class Vibrator
         // not be null, let that be checked, because the server will drop it
         // anyway
         if (repeat < pattern.length) {
+            /*
             try {
                 mService.vibratePattern(pattern, repeat, mToken);
             } catch (RemoteException e) {
                 Log.w(TAG, "Failed to vibrate.", e);
-            }
+            }*/
         } else {
             throw new ArrayIndexOutOfBoundsException();
         }
