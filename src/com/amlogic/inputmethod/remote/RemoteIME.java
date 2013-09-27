@@ -52,6 +52,7 @@ import android.widget.PopupWindow;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
+import android.app.SystemWriteManager;
 
 /**
  * Main class of the Pinyin input method.
@@ -174,6 +175,7 @@ public class RemoteIME extends InputMethodService {
     private Boolean mEnterEnabled;
 
     private Boolean mShiftTag = false;
+    private SystemWriteManager sw = null;
     // receive ringer mode changes
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
@@ -207,6 +209,8 @@ public class RemoteIME extends InputMethodService {
 
         mEnvironment.onConfigurationChanged(getResources().getConfiguration(),
                 this);
+
+        sw = (SystemWriteManager) getSystemService("system_write");
     }
 
     @Override
@@ -243,6 +247,12 @@ public class RemoteIME extends InputMethodService {
         
         if(newConfig.diff(env.getConfiguration()) != 0)
             super.onConfigurationChanged(newConfig);
+
+        //density and display-size will be change when switch outputmode between 1080 and 720, need to update configuration 
+        if(sw.getPropertyBoolean("ro.platform.has.realoutputmode", false))
+            {
+            super.onConfigurationChanged(newConfig);
+            }
         
         resetToIdleState(false);
     }

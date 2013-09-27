@@ -20,6 +20,7 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.view.Display;
 import android.view.WindowManager;
+import android.app.SystemWriteManager;
 
 /**
  * Global environment configurations for showing soft keyboard and candidate
@@ -115,7 +116,9 @@ public class Environment {
     }
 
     public void onConfigurationChanged(Configuration newConfig, Context context) {
-        if (mConfig.orientation != newConfig.orientation) {
+        //density and display-size will be change when switch outputmode between 1080 and 720, need to update configuration 
+        SystemWriteManager sw = (SystemWriteManager) context.getSystemService("system_write");
+        if ((mConfig.orientation != newConfig.orientation)||(sw.getPropertyBoolean("ro.platform.has.realoutputmode", false))) {
             WindowManager wm = (WindowManager) context
                     .getSystemService(Context.WINDOW_SERVICE);
             Display d = wm.getDefaultDisplay();
