@@ -707,9 +707,13 @@ public class SkbContainer extends RelativeLayout implements OnTouchListener {
                 mSoftKeyFocus=skb.getKey(0,0);      
             else
             {
-                int x = mSoftKeyFocus.mLeft-skb.getKeyXMargin()-10;
-                int y = mSoftKeyFocus.mTop+mSoftKeyFocus.height()/2;
-                mSoftKeyFocus = skb.mapToKey(x,y);
+                if (mSoftKeyFocus.mLocation > 0) {
+                    int x = mSoftKeyFocus.mLeft-skb.getKeyXMargin()-10;
+                    int y = mSoftKeyFocus.mTop+mSoftKeyFocus.height()/2;
+                    mSoftKeyFocus = skb.mapToKey(x,y);
+                } else {
+                    mSoftKeyFocus = skb.getKey(mSoftKeyFocus.mRow, -1);
+                }
             }
         }
         else if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT) {
@@ -737,9 +741,14 @@ public class SkbContainer extends RelativeLayout implements OnTouchListener {
                 mSoftKeyFocus=skb.getKey(0,0);      
             else
             {
-                int x = mSoftKeyFocus.mRight+skb.getKeyXMargin();
-                int y = mSoftKeyFocus.mTop+mSoftKeyFocus.height()/2;
-                mSoftKeyFocus = skb.mapToKey(x,y);
+                int keyNum = skb.getLocNum(mSoftKeyFocus.mRow);
+                if (mSoftKeyFocus.mLocation < keyNum - 1) {
+                    int x = mSoftKeyFocus.mRight+skb.getKeyXMargin();
+                    int y = mSoftKeyFocus.mTop+mSoftKeyFocus.height()/2;
+                    mSoftKeyFocus = skb.mapToKey(x,y);
+                } else {
+                    mSoftKeyFocus = skb.getKey(mSoftKeyFocus.mRow, 0);
+                }
             }
                 
         }

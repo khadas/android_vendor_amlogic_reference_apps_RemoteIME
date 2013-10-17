@@ -277,6 +277,19 @@ public class SoftKeyboard {
         return 0;
     }
 
+    public int getLocNum(int row) {
+        if (null == mKeyRows)
+            return 0;
+
+        if (mKeyRows.size() <= row)
+            row = mKeyRows.size() - 1;
+        else if (row < 0)
+            row = 0;
+
+        List<SoftKey> softKeys = mKeyRows.get(row).mSoftKeys;
+        return softKeys.size();
+    }
+
     public KeyRow getKeyRowForDisplay(int row) {
         if (null != mKeyRows && mKeyRows.size() > row) {
             KeyRow keyRow = mKeyRows.get(row);
