@@ -23,6 +23,8 @@
 
         <application android:icon="@drawable/app_icon"
           android:allowBackup="false"
+          android:persistent="true"
+          android:killAfterRestore="false"
           android:label="@string/ime_name">
             <service android:name=".PinyinDecoderService"
                 android:exported="true">
