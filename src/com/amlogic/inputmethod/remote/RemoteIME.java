@@ -938,6 +938,7 @@ public class RemoteIME extends InputMethodService {
         if (null != mComposingView) mComposingView.reset();
         if (resetInlineText) commitResultText("");
         resetCandidateWindow();
+        setCandidatesViewShown(false);
   //      boolean ret = mSkbContainer.requestFocus();
   //      Log.d(TAG, "reset to idle:" + ret + ", hasFocus:"+mSkbContainer.hasFocus());
     }
