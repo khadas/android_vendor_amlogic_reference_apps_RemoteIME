@@ -669,6 +669,7 @@ public class RemoteIME extends InputMethodService {
 
     private boolean processStatePredict(int keyChar, int keyCode,
             KeyEvent event, boolean realAction) {
+        if (KeyEvent.isGamepadButton(keyCode)) return false;
         if (!realAction) return true;
 
         // If ALT key is pressed, input alternative key.
