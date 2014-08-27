@@ -265,11 +265,16 @@ public class SkbContainer extends RelativeLayout implements OnTouchListener {
         mMajorView.invalidate();
     }
 
-    public void updateInputMode() {
+	public void updateInputMode(){
+		updateInputMode(false);
+	}
+
+	/*@hide*/
+    public void updateInputMode(boolean force) {
         int skbLayout = mInputModeSwitcher.getSkbLayout();
-        if (mSkbLayout != skbLayout) {
+        if (mSkbLayout != skbLayout||force) {
             mSkbLayout = skbLayout;
-            updateSkbLayout();
+            updateSkbLayout(force);
         }
 
         mLastCandidatesShowing = false;
@@ -283,7 +288,7 @@ public class SkbContainer extends RelativeLayout implements OnTouchListener {
         return;
     }
 
-    private void updateSkbLayout() {
+    private void updateSkbLayout(boolean force) {
         int screenWidth = mEnvironment.getScreenWidth();
         int keyHeight = mEnvironment.getKeyHeight();
         int skbHeight = mEnvironment.getSkbHeight();
@@ -300,27 +305,27 @@ public class SkbContainer extends RelativeLayout implements OnTouchListener {
         switch (mSkbLayout) {
         case R.xml.skb_qwerty:
             majorSkb = skbPool.getSoftKeyboard(R.xml.skb_qwerty,
-                    R.xml.skb_qwerty, screenWidth, skbHeight, mContext);
+                    R.xml.skb_qwerty, screenWidth, skbHeight, mContext, force);
             break;
 
         case R.xml.skb_sym1:
             majorSkb = skbPool.getSoftKeyboard(R.xml.skb_sym1, R.xml.skb_sym1,
-                    screenWidth, skbHeight, mContext);
+                    screenWidth, skbHeight, mContext, force);
             break;
 
         case R.xml.skb_sym2:
             majorSkb = skbPool.getSoftKeyboard(R.xml.skb_sym2, R.xml.skb_sym2,
-                    screenWidth, skbHeight, mContext);
+                    screenWidth, skbHeight, mContext, force);
             break;
 
         case R.xml.skb_smiley:
             majorSkb = skbPool.getSoftKeyboard(R.xml.skb_smiley,
-                    R.xml.skb_smiley, screenWidth, skbHeight, mContext);
+                    R.xml.skb_smiley, screenWidth, skbHeight, mContext, force);
             break;
 
         case R.xml.skb_phone:
             majorSkb = skbPool.getSoftKeyboard(R.xml.skb_phone,
-                    R.xml.skb_phone, screenWidth, skbHeight, mContext);
+                    R.xml.skb_phone, screenWidth, skbHeight, mContext, force);
             break;
         default:
         }

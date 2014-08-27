@@ -41,15 +41,14 @@ public class SkbPool {
         mSoftKeyboards.clear();
     }
 
-    public SkbTemplate getSkbTemplate(int skbTemplateId, Context context) {
-        for (int i = 0; i < mSkbTemplates.size(); i++) {
+    public SkbTemplate getSkbTemplate(int skbTemplateId, Context context, boolean force) {
+ 		for (int i = 0; i < mSkbTemplates.size()&&(!force); i++) {
             SkbTemplate t = mSkbTemplates.elementAt(i);
-            if (t.getSkbTemplateId() == skbTemplateId) {
+               if (t.getSkbTemplateId() == skbTemplateId) {
                 return t;
             }
         }
-
-        if (null != context) {
+        if (null != context||(force && (null != context))) {
             XmlKeyboardLoader xkbl = new XmlKeyboardLoader(context);
             SkbTemplate t = xkbl.loadSkbTemplate(skbTemplateId);
             if (null != t) {
@@ -60,11 +59,16 @@ public class SkbPool {
         return null;
     }
 
+	public SoftKeyboard getSoftKeyboard(int skbCacheId, int skbXmlId,
+            int skbWidth, int skbHeight, Context context) {
+		return getSoftKeyboard( skbCacheId,  skbXmlId, skbWidth,  skbHeight,  context, false);
+	}
+	/*@hide*/
     // Try to find the keyboard in the pool with the cache id. If there is no
     // keyboard found, try to load it with the given xml id.
     public SoftKeyboard getSoftKeyboard(int skbCacheId, int skbXmlId,
-            int skbWidth, int skbHeight, Context context) {
-        for (int i = 0; i < mSoftKeyboards.size(); i++) {
+            int skbWidth, int skbHeight, Context context,boolean force) {
+        for (int i = 0; i < mSoftKeyboards.size()&&(!force); i++) {
             SoftKeyboard skb = mSoftKeyboards.elementAt(i);
             if (skb.getCacheId() == skbCacheId && skb.getSkbXmlId() == skbXmlId) {
                 skb.setSkbCoreSize(skbWidth, skbHeight);
@@ -72,9 +76,9 @@ public class SkbPool {
                 return skb;
             }
         }
-        if (null != context) {
+        if (null != context ||((null != context) && force)) {
             XmlKeyboardLoader xkbl = new XmlKeyboardLoader(context);
-            SoftKeyboard skb = xkbl.loadKeyboard(skbXmlId, skbWidth, skbHeight);
+            SoftKeyboard skb = xkbl.loadKeyboard(skbXmlId, skbWidth, skbHeight, force);
             if (skb != null) {
                 if (skb.getCacheFlag()) {
                     skb.setCacheId(skbCacheId);

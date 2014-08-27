@@ -1106,7 +1106,7 @@ public class RemoteIME extends InputMethodService {
         if (sKey.isUserDefKey()) {
             updateIcon(mInputModeSwitcher.switchModeForUserKey(keyCode));
             resetToIdleState(false);
-            mSkbContainer.updateInputMode();
+            mSkbContainer.updateInputMode(true);
         } else {
             if (sKey.isKeyCodeKey()) {
                 KeyEvent eDown = new KeyEvent(0, 0, KeyEvent.ACTION_DOWN,
@@ -1254,7 +1254,7 @@ public class RemoteIME extends InputMethodService {
         }
         updateIcon(mInputModeSwitcher.requestInputWithSkb(editorInfo));
         resetToIdleState(false);
-        mSkbContainer.updateInputMode();
+        mSkbContainer.updateInputMode(true);
         setCandidatesViewShown(false);
         mSkbContainer.requestFocus();
         mSkbContainer.clearKeyFocus();

@@ -426,7 +426,7 @@ public class XmlKeyboardLoader {
         return null;
     }
 
-    public SoftKeyboard loadKeyboard(int resourceId, int skbWidth, int skbHeight) {
+    public SoftKeyboard loadKeyboard(int resourceId, int skbWidth, int skbHeight, boolean force) {
         if (null == mContext) return null;
         Resources r = mResources;
         SkbPool skbPool = SkbPool.getInstance();
@@ -466,7 +466,7 @@ public class XmlKeyboardLoader {
                         // 1.2 Try to get the template from pool. If it is not
                         // in, the pool will try to load it.
                         mSkbTemplate = skbPool.getSkbTemplate(skbTemplateId,
-                                mContext);
+                                mContext, force);
 
                         if (null == mSkbTemplate
                                 || !attrSkb.getAttributes(attrDef)) {

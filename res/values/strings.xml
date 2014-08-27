@@ -64,4 +64,6 @@
     <string name="toggle_enter_done_label">Done</string>
     <string name="toggle_en_label">English</string>
     <string name="toggle_cn_label">Chinese</string>
+    <string name="sym_en_label">English Symbol</string>
+    <string name="sym_cn_label">Chinese Symbol</string>
 </resources>

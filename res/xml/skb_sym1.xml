@@ -70,8 +70,8 @@
   </row>
 
   <row width="14.696%p" key_type="1">
-    <key code="-2" label="中 符" width="20%p" repeat="true">
-      <toggle_state state_id="@string/toggle_en_sym1" label="英 符" code="-2"/>
+    <key code="-2" label="@string/sym_cn_label" width="20%p" repeat="true">
+      <toggle_state state_id="@string/toggle_en_sym1" label="@string/sym_en_label" code="-2"/>
     </key>
     <key code="-3" key_type="3" label="\?123"/>
     <key code="62" key_type="5" width="30.608%p"/>
