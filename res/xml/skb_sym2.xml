@@ -42,7 +42,6 @@
 
   <row width="10.205%p">
     <key code="-5" width="14.286%p" key_type="3" label="ALT"/>
-    <key label="&amp;"/>
     <key label="™"/>
     <key label="‘">
       <toggle_state state_id="@string/toggle_en_sym2" label="‘"/>
