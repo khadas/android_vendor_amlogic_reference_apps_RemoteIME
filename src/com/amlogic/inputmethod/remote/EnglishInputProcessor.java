@@ -46,8 +46,12 @@ public class EnglishInputProcessor {
                 keyChar = keyChar + 'A' - 'a';
             }
         } else if (keyCode >= KeyEvent.KEYCODE_0
-                && keyCode <= KeyEvent.KEYCODE_9)
+                && keyCode <= KeyEvent.KEYCODE_9) {
             keyChar = keyCode - KeyEvent.KEYCODE_0 + '0';
+            if (event.isShiftPressed()) {
+                return false;
+            }
+        }
         else if (keyCode == KeyEvent.KEYCODE_COMMA)
             keyChar = ',';
         else if (keyCode == KeyEvent.KEYCODE_PERIOD)
