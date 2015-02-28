@@ -21,6 +21,7 @@ import com.amlogic.inputmethod.remote.SoftKeyboard.KeyRow;
 import android.content.res.Resources;
 import android.view.inputmethod.EditorInfo;
 
+import java.util.Locale;
 /**
  * Switcher used to switching input mode between Chinese, English, symbol,etc.
  */
@@ -135,6 +136,11 @@ public class InputModeSwitcher {
      * anded with {@link #MASK_CASE} to get this information.
      */
     private static final int MASK_CASE_UPPER = 0x00200000;
+
+    /**
+     * Mode for inputing English with soft keyboard.
+     */
+    public static final int MODE_SKB_ENGLISH = (MASK_SKB_LAYOUT_QWERTY | MASK_LANGUAGE_EN);
 
     /**
      * Mode for inputing Chinese with soft keyboard.
@@ -374,6 +380,11 @@ public class InputModeSwitcher {
 
     public InputModeSwitcher(RemoteIME imeService) {
         mImeService = imeService;
+        if("zh".equals(Locale.getDefault().getLanguage())){
+            mRecentLauageInputMode = MODE_SKB_CHINESE;
+        }else{
+            mRecentLauageInputMode = MODE_SKB_ENGLISH;
+        }
         Resources r = mImeService.getResources();
         mToggleStateCn = Integer.parseInt(r.getString(R.string.toggle_cn));
         mToggleStateCnCand = Integer.parseInt(r
