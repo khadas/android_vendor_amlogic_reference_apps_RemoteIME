@@ -20,7 +20,7 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.view.Display;
 import android.view.WindowManager;
-import android.app.SystemWriteManager;
+import com.droidlogic.app.SystemControlManager;
 
 /**
  * Global environment configurations for showing soft keyboard and candidate
@@ -61,7 +61,7 @@ public class Environment {
      * How much should the balloon height be larger than that of the real key.
      * It is relative to the smaller one of screen width and height.
      */
-    private static final float KEY_BALLOON_HEIGHT_PLUS_RATIO = 0.07f;
+    private static final float KEY_BALLOON_HEIGHT_PLUS_RATIO = 0.08f;
 
     /**
      * The text size for normal keys. It is relative to the smaller one of
@@ -79,7 +79,7 @@ public class Environment {
      * The text size balloons of normal keys. It is relative to the smaller one
      * of screen width and height.
      */
-    private static final float NORMAL_BALLOON_TEXT_SIZE_RATIO = 0.14f;
+    private static final float NORMAL_BALLOON_TEXT_SIZE_RATIO = 0.12f;
 
     /**
      * The text size balloons of function keys. It is relative to the smaller
@@ -115,35 +115,32 @@ public class Environment {
         return mInstance;
     }
 
-    public void onConfigurationChanged(Configuration newConfig, Context context) {
-        //density and display-size will be change when switch outputmode between 1080 and 720, need to update configuration 
-        SystemWriteManager sw = (SystemWriteManager) context.getSystemService("system_write");
-        if ((mConfig.orientation != newConfig.orientation)||(sw.getPropertyBoolean("ro.platform.has.realoutputmode", false))) {
-            WindowManager wm = (WindowManager) context
-                    .getSystemService(Context.WINDOW_SERVICE);
+    public void onConfigurationChanged ( Configuration newConfig, Context context ) {
+        //density and display-size will be change when switch outputmode between 1080 and 720, need to update configuration
+        SystemControlManager sw =  new SystemControlManager ( context );
+        if ( ( mConfig.orientation != newConfig.orientation ) || ( sw.getPropertyBoolean ( "ro.platform.has.realoutputmode", false ) ) ) {
+            WindowManager wm = ( WindowManager ) context.getSystemService ( Context.WINDOW_SERVICE );
             Display d = wm.getDefaultDisplay();
             mScreenWidth = d.getWidth();
             mScreenHeight = d.getHeight();
-
             int scale;
-            if (mScreenHeight > mScreenWidth) {
-                mKeyHeight = (int) (mScreenHeight * KEY_HEIGHT_RATIO_PORTRAIT);
-                mCandidatesAreaHeight = (int) (mScreenHeight * CANDIDATES_AREA_HEIGHT_RATIO_PORTRAIT);
+            if ( mScreenHeight > mScreenWidth ) {
+                mKeyHeight = ( int ) ( mScreenHeight * KEY_HEIGHT_RATIO_PORTRAIT );
+                mCandidatesAreaHeight = ( int ) ( mScreenHeight * CANDIDATES_AREA_HEIGHT_RATIO_PORTRAIT );
                 scale = mScreenWidth;
             } else {
-                mKeyHeight = (int) (mScreenHeight * KEY_HEIGHT_RATIO_LANDSCAPE);
-                mCandidatesAreaHeight = (int) (mScreenHeight * CANDIDATES_AREA_HEIGHT_RATIO_LANDSCAPE);
+                mKeyHeight = ( int ) ( mScreenHeight * KEY_HEIGHT_RATIO_LANDSCAPE );
+                mCandidatesAreaHeight = ( int ) ( mScreenHeight * CANDIDATES_AREA_HEIGHT_RATIO_LANDSCAPE );
                 scale = mScreenHeight;
             }
-            mNormalKeyTextSize = (int) (scale * NORMAL_KEY_TEXT_SIZE_RATIO);
-            mFunctionKeyTextSize = (int) (scale * FUNCTION_KEY_TEXT_SIZE_RATIO);
-            mNormalBalloonTextSize = (int) (scale * NORMAL_BALLOON_TEXT_SIZE_RATIO);
-            mFunctionBalloonTextSize = (int) (scale * FUNCTION_BALLOON_TEXT_SIZE_RATIO);
-            mKeyBalloonWidthPlus = (int) (scale * KEY_BALLOON_WIDTH_PLUS_RATIO);
-            mKeyBalloonHeightPlus = (int) (scale * KEY_BALLOON_HEIGHT_PLUS_RATIO);
+            mNormalKeyTextSize = ( int ) ( scale * NORMAL_KEY_TEXT_SIZE_RATIO );
+            mFunctionKeyTextSize = ( int ) ( scale * FUNCTION_KEY_TEXT_SIZE_RATIO );
+            mNormalBalloonTextSize = ( int ) ( scale * NORMAL_BALLOON_TEXT_SIZE_RATIO );
+            mFunctionBalloonTextSize = ( int ) ( scale * FUNCTION_BALLOON_TEXT_SIZE_RATIO );
+            mKeyBalloonWidthPlus = ( int ) ( scale * KEY_BALLOON_WIDTH_PLUS_RATIO );
+            mKeyBalloonHeightPlus = ( int ) ( scale * KEY_BALLOON_HEIGHT_PLUS_RATIO );
         }
-
-        mConfig.updateFrom(newConfig);
+        mConfig.updateFrom ( newConfig );
     }
 
     public Configuration getConfiguration() {

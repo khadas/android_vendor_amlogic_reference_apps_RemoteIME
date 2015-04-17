@@ -52,7 +52,7 @@ import android.widget.PopupWindow;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
-import android.app.SystemWriteManager;
+import com.droidlogic.app.SystemControlManager;
 
 /**
  * Main class of the Pinyin input method.
@@ -174,15 +174,15 @@ public class RemoteIME extends InputMethodService {
     
     private Boolean mEnterEnabled;
 
-    private Boolean mShiftTag = false;
-    private SystemWriteManager sw = null;
-    // receive ringer mode changes
-    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            SoundManager.getInstance(context).updateRingerMode();
-        }
-    };
+        private Boolean mShiftTag = false;
+        private SystemControlManager sw = null;
+        // receive ringer mode changes
+        private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive ( Context context, Intent intent ) {
+                SoundManager.getInstance ( context ).updateRingerMode();
+            }
+        };
 
     @Override
     public void onCreate() {
@@ -210,7 +210,7 @@ public class RemoteIME extends InputMethodService {
         mEnvironment.onConfigurationChanged(getResources().getConfiguration(),
                 this);
 
-        sw = (SystemWriteManager) getSystemService("system_write");
+        sw = new SystemControlManager ( this );
     }
 
     @Override
@@ -244,16 +244,14 @@ public class RemoteIME extends InputMethodService {
         if (null != mCandidatesBalloon) {
             mCandidatesBalloon.dismiss();
         }
-        
-        if(newConfig.diff(env.getConfiguration()) != 0)
+        if (newConfig.diff(env.getConfiguration()) != 0)
             super.onConfigurationChanged(newConfig);
 
         //density and display-size will be change when switch outputmode between 1080 and 720, need to update configuration 
-        if(sw.getPropertyBoolean("ro.platform.has.realoutputmode", false))
-            {
+        if (sw.getPropertyBoolean("ro.platform.has.realoutputmode", false)) {
             super.onConfigurationChanged(newConfig);
-            }
-        
+        }
+
         resetToIdleState(false);
     }
 

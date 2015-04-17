@@ -8,7 +8,7 @@ LOCAL_SRC_FILES := \
          $(call all-subdir-java-files)
 
 LOCAL_PACKAGE_NAME := RemoteIME
-
+LOCAL_JAVA_LIBRARIES := droidlogic
 LOCAL_REQUIRED_MODULES := libjni_remoteime
 
 LOCAL_STATIC_JAVA_LIBRARIES := com.amlogic.inputmethod.remote.lib
