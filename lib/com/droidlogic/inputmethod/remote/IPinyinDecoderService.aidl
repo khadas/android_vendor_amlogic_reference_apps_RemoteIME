@@ -15,7 +15,7 @@
  */
 
 
-package com.amlogic.inputmethod.remote;
+package com.droidlogic.inputmethod.remote;
 
 interface IPinyinDecoderService {
     int getInt();

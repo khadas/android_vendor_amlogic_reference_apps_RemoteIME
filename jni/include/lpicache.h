@@ -23,39 +23,39 @@
 
 namespace ime_pinyin {
 
-// Used to cache LmaPsbItem list for half spelling ids.
-class LpiCache {
- private:
-  static LpiCache *instance_;
-  static const int kMaxLpiCachePerId = 15;
+    // Used to cache LmaPsbItem list for half spelling ids.
+    class LpiCache {
+        private:
+            static LpiCache *instance_;
+            static const int kMaxLpiCachePerId = 15;
 
-  LmaPsbItem *lpi_cache_;
-  uint16 *lpi_cache_len_;
+            LmaPsbItem *lpi_cache_;
+            uint16 *lpi_cache_len_;
 
- public:
-  LpiCache();
-  ~LpiCache();
+        public:
+            LpiCache();
+            ~LpiCache();
 
-  static LpiCache& get_instance();
+            static LpiCache &get_instance();
 
-  // Test if the LPI list of the given splid  has been cached.
-  // If splid is a full spelling id, it returns false, because we only cache
-  // list for half ids.
-  bool is_cached(uint16 splid);
+            // Test if the LPI list of the given splid  has been cached.
+            // If splid is a full spelling id, it returns false, because we only cache
+            // list for half ids.
+            bool is_cached ( uint16 splid );
 
-  // Put LPI list to cahce. If the length of the list, lpi_num, is longer than
-  // the cache buffer. the list will be truncated, and function returns the
-  // maximum length of the cache buffer.
-  // Note: splid must be a half id, and lpi_items must be not NULL. The
-  // caller of this function should guarantee this.
-  size_t put_cache(uint16 splid, LmaPsbItem lpi_items[], size_t lpi_num);
+            // Put LPI list to cahce. If the length of the list, lpi_num, is longer than
+            // the cache buffer. the list will be truncated, and function returns the
+            // maximum length of the cache buffer.
+            // Note: splid must be a half id, and lpi_items must be not NULL. The
+            // caller of this function should guarantee this.
+            size_t put_cache ( uint16 splid, LmaPsbItem lpi_items[], size_t lpi_num );
 
-  // Get the cached list for the given half id.
-  // Return the length of the cached buffer.
-  // Note: splid must be a half id, and lpi_items must be not NULL. The
-  // caller of this function should guarantee this.
-  size_t get_cache(uint16 splid, LmaPsbItem lpi_items[], size_t lpi_max);
-};
+            // Get the cached list for the given half id.
+            // Return the length of the cached buffer.
+            // Note: splid must be a half id, and lpi_items must be not NULL. The
+            // caller of this function should guarantee this.
+            size_t get_cache ( uint16 splid, LmaPsbItem lpi_items[], size_t lpi_max );
+    };
 
 }  // namespace
 

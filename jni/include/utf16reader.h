@@ -22,27 +22,27 @@
 
 namespace ime_pinyin {
 
-class Utf16Reader {
- private:
-  FILE *fp_;
-  char16 *buffer_;
-  size_t buffer_total_len_;
-  size_t buffer_next_pos_;
+    class Utf16Reader {
+        private:
+            FILE *fp_;
+            char16 *buffer_;
+            size_t buffer_total_len_;
+            size_t buffer_next_pos_;
 
-  // Always less than buffer_total_len_ - buffer_next_pos_
-  size_t buffer_valid_len_;
+            // Always less than buffer_total_len_ - buffer_next_pos_
+            size_t buffer_valid_len_;
 
- public:
-  Utf16Reader();
-  ~Utf16Reader();
+        public:
+            Utf16Reader();
+            ~Utf16Reader();
 
-  // filename is the name of the file to open.
-  // buffer_len specifies how long buffer should be allocated to speed up the
-  // future reading
-  bool open(const char* filename, size_t buffer_len);
-  char16* readline(char16* read_buf, size_t max_len);
-  bool close();
-};
+            // filename is the name of the file to open.
+            // buffer_len specifies how long buffer should be allocated to speed up the
+            // future reading
+            bool open ( const char *filename, size_t buffer_len );
+            char16 *readline ( char16 *read_buf, size_t max_len );
+            bool close();
+    };
 }
 
 #endif  // PINYINIME_INCLUDE_UTF16READER_H__

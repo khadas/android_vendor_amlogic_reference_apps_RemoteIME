@@ -5,7 +5,7 @@ LOCAL_PATH := $(call my-dir)
 include $(CLEAR_VARS)
 
 LOCAL_SRC_FILES := \
-	android/com_amlogic_inputmethod_remote_PinyinDecoderService.cpp \
+	android/com_droidlogic_inputmethod_remote_PinyinDecoderService.cpp \
 	share/dictbuilder.cpp \
 	share/dictlist.cpp \
 	share/dicttrie.cpp \

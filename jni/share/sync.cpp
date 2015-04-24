@@ -22,91 +22,85 @@
 
 namespace ime_pinyin {
 
-Sync::Sync()
-  : userdict_(NULL),
-    dictfile_(NULL),
-    last_count_(0) {
-};
+    Sync::Sync()
+        : userdict_ ( NULL ),
+          dictfile_ ( NULL ),
+          last_count_ ( 0 ) {
+    };
 
-Sync::~Sync() {
-}
+    Sync::~Sync() {
+    }
 
 
-bool Sync::begin(const char * filename) {
-  if (userdict_) {
-    finish();
-  }
+    bool Sync::begin ( const char *filename ) {
+        if ( userdict_ ) {
+            finish();
+        }
+        if ( !filename ) {
+            return false;
+        }
+        dictfile_ = strdup ( filename );
+        if ( !dictfile_ ) {
+            return false;
+        }
+        userdict_ = new UserDict();
+        if ( !userdict_ ) {
+            free ( dictfile_ );
+            dictfile_ = NULL;
+            return false;
+        }
+        if ( userdict_->load_dict ( ( const char * ) dictfile_, kUserDictIdStart,
+                                    kUserDictIdEnd ) == false ) {
+            delete userdict_;
+            userdict_ = NULL;
+            free ( dictfile_ );
+            dictfile_ = NULL;
+            return false;
+        }
+        userdict_->set_limit ( kUserDictMaxLemmaCount, kUserDictMaxLemmaSize, kUserDictRatio );
+        return true;
+    }
 
-  if (!filename) {
-    return false;
-  }
+    int Sync::put_lemmas ( char16 *lemmas, int len ) {
+        return userdict_->put_lemmas_no_sync_from_utf16le_string ( lemmas, len );
+    }
 
-  dictfile_ = strdup(filename);
-  if (!dictfile_) {
-    return false;
-  }
+    int Sync::get_lemmas ( char16 *str, int size ) {
+        return userdict_->get_sync_lemmas_in_utf16le_string_from_beginning ( str, size, &last_count_ );
+    }
 
-  userdict_ = new UserDict();
-  if (!userdict_) {
-    free(dictfile_);
-    dictfile_ = NULL;
-    return false;
-  }
+    int Sync::get_last_got_count() {
+        return last_count_;
+    }
 
-  if (userdict_->load_dict((const char*)dictfile_, kUserDictIdStart,
-                           kUserDictIdEnd) == false) {
-    delete userdict_;
-    userdict_ = NULL;
-    free(dictfile_);
-    dictfile_ = NULL;
-    return false;
-  }
+    int Sync::get_total_count() {
+        return userdict_->get_sync_count();
+    }
 
-  userdict_->set_limit(kUserDictMaxLemmaCount, kUserDictMaxLemmaSize, kUserDictRatio);
+    void Sync::clear_last_got() {
+        if ( last_count_ < 0 ) {
+            return;
+        }
+        userdict_->clear_sync_lemmas ( 0, last_count_ );
+        last_count_ = 0;
+    }
 
-  return true;
-}
+    void Sync::finish() {
+        if ( userdict_ ) {
+            userdict_->close_dict();
+            delete userdict_;
+            userdict_ = NULL;
+            free ( dictfile_ );
+            dictfile_ = NULL;
+            last_count_ = 0;
+        }
+    }
 
-int Sync::put_lemmas(char16 * lemmas, int len) {
-  return userdict_->put_lemmas_no_sync_from_utf16le_string(lemmas, len);
-}
-
-int Sync::get_lemmas(char16 * str, int size) {
-  return userdict_->get_sync_lemmas_in_utf16le_string_from_beginning(str, size, &last_count_);
-}
-
-int Sync::get_last_got_count() {
-  return last_count_;
-}
-
-int Sync::get_total_count() {
-  return userdict_->get_sync_count();
-}
-
-void Sync::clear_last_got() {
-  if (last_count_ < 0) {
-    return;
-  }
-  userdict_->clear_sync_lemmas(0, last_count_);
-  last_count_ = 0;
-}
-
-void Sync::finish() {
-  if (userdict_) {
-    userdict_->close_dict();
-    delete userdict_;
-    userdict_ = NULL;
-    free(dictfile_);
-    dictfile_ = NULL;
-    last_count_ = 0;
-  }
-}
-
-int Sync::get_capacity() {
-  UserDict::UserDictStat stat;
-  userdict_->state(&stat);
-  return stat.limit_lemma_count - stat.lemma_count;
-}
+    int Sync::get_capacity() {
+        UserDict::UserDictStat stat;
+        userdict_->state ( &stat );
+        return stat.limit_lemma_count - stat.lemma_count;
+    }
 
 }
 #endif

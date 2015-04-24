@@ -21,12 +21,12 @@
 
 namespace ime_pinyin {
 
-void myqsort(void *p, size_t n, size_t es,
-             int (*cmp)(const void *, const void *));
+    void myqsort ( void *p, size_t n, size_t es,
+                   int ( *cmp ) ( const void *, const void * ) );
 
-void *mybsearch(const void *key, const void *base,
-                size_t nmemb, size_t size,
-                int (*compar)(const void *, const void *));
+    void *mybsearch ( const void *key, const void *base,
+                      size_t nmemb, size_t size,
+                      int ( *compar ) ( const void *, const void * ) );
 }
 
 #endif  // PINYINIME_INCLUDE_MYSTDLIB_H__

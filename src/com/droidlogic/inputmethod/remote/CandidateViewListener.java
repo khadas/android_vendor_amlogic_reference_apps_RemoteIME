@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package com.amlogic.inputmethod.remote;
+package com.droidlogic.inputmethod.remote;
 
 /**
  * Interface to notify the input method when the user clicks a candidate or
  * makes a direction-gesture on candidate view.
  */
 public interface CandidateViewListener {
-    public void onClickChoice(int choiceId);
+    public void onClickChoice ( int choiceId );
 
     public void onToLeftGesture();
 

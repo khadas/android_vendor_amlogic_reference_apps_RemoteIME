@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <!-- Copyright (C) 2009 The Android Open Source Project
 
      Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,5 +16,5 @@
 <resources>
   <bool name="im_is_default">true</bool>
   <!-- The default to true for most of board -->
-  <bool name="is_enableEnter">true</bool> 
+  <bool name="is_enableEnter">true</bool>
 </resources>

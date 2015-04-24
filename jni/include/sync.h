@@ -25,58 +25,58 @@
 
 namespace ime_pinyin {
 
-// Class for user dictionary synchronization
-// This class is not thread safe
-// Normal invoking flow will be
-//   begin() ->
-//   put_lemmas() x N ->
-//   {
-//     get_lemmas() ->
-//     [ get_last_got_count() ] ->
-//     clear_last_got() ->
-//   } x N ->
-//   finish()
-class Sync {
- public:
-  Sync();
-  ~Sync();
+    // Class for user dictionary synchronization
+    // This class is not thread safe
+    // Normal invoking flow will be
+    //   begin() ->
+    //   put_lemmas() x N ->
+    //   {
+    //     get_lemmas() ->
+    //     [ get_last_got_count() ] ->
+    //     clear_last_got() ->
+    //   } x N ->
+    //   finish()
+    class Sync {
+        public:
+            Sync();
+            ~Sync();
 
-  static const int kUserDictMaxLemmaCount = 5000;
-  static const int kUserDictMaxLemmaSize = 200000;
-  static const int kUserDictRatio = 20;
+            static const int kUserDictMaxLemmaCount = 5000;
+            static const int kUserDictMaxLemmaSize = 200000;
+            static const int kUserDictRatio = 20;
 
-  bool begin(const char * filename);
+            bool begin ( const char *filename );
 
-  // Merge lemmas downloaded from sync server into local dictionary
-  // lemmas, lemmas string encoded in UTF16LE
-  // len, length of lemmas string
-  // Return how many lemmas merged successfully
-  int put_lemmas(char16 * lemmas, int len);
+            // Merge lemmas downloaded from sync server into local dictionary
+            // lemmas, lemmas string encoded in UTF16LE
+            // len, length of lemmas string
+            // Return how many lemmas merged successfully
+            int put_lemmas ( char16 *lemmas, int len );
 
-  // Get local new user lemmas into UTF16LE string
-  // str, buffer ptr to store new user lemmas
-  // size, size of buffer
-  // Return length of returned buffer in measure of UTF16LE
-  int get_lemmas(char16 * str, int size);
+            // Get local new user lemmas into UTF16LE string
+            // str, buffer ptr to store new user lemmas
+            // size, size of buffer
+            // Return length of returned buffer in measure of UTF16LE
+            int get_lemmas ( char16 *str, int size );
 
-  // Return lemmas count in last get_lemmas()
-  int get_last_got_count();
+            // Return lemmas count in last get_lemmas()
+            int get_last_got_count();
 
-  // Return total lemmas count need get_lemmas()
-  int get_total_count();
+            // Return total lemmas count need get_lemmas()
+            int get_total_count();
 
-  // Clear lemmas got by recent get_lemmas()
-  void clear_last_got();
+            // Clear lemmas got by recent get_lemmas()
+            void clear_last_got();
 
-  void finish();
+            void finish();
 
-  int get_capacity();
+            int get_capacity();
 
- private:
-  UserDict * userdict_;
-  char * dictfile_;
-  int last_count_;
-};
+        private:
+            UserDict *userdict_;
+            char *dictfile_;
+            int last_count_;
+    };
 
 }
 
