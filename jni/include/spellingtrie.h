@@ -63,10 +63,10 @@ namespace ime_pinyin {
             // so spelling_size_ is 8.
             // Structure: The string ended with '\0' + score char.
             // An item with a lower score has a higher probability.
-            size_t spelling_size_;
+            int spelling_size_;
 
             // Number of full spelling ids.
-            size_t spelling_num_;
+            int spelling_num_;
 
             float score_amplifier_;
             unsigned char average_score_;

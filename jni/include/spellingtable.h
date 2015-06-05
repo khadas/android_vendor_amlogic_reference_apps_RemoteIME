@@ -50,7 +50,7 @@ namespace ime_pinyin {
             // score, an extra char after each spelling string is the score.
             // An item with a lower score has a higher probability.
             char *spelling_buf_;
-            size_t spelling_size_;
+            int spelling_size_;
 
             double total_freq_;
 
