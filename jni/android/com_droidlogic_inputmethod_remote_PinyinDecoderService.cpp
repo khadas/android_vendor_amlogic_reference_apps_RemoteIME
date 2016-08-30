@@ -193,7 +193,7 @@ extern "C" {
 
     JNIEXPORT jint JNICALL nativeImGetPredictsNum ( JNIEnv *env, jclass clazz,
                                                     jstring fixed_str ) {
-        char16 *fixed_ptr = ( char16 * ) ( *env ).GetStringChars ( fixed_str, false );
+        char16 *fixed_ptr = ( char16 * ) ( *env ).GetStringChars ( fixed_str, NULL );
         size_t fixed_len = ( size_t ) ( *env ).GetStringLength ( fixed_str );
         char16 fixed_buf[kMaxPredictSize + 1];
         if ( fixed_len > kMaxPredictSize ) {
