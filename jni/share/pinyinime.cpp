@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 #include <stdlib.h>
 #include "../include/pinyinime.h"
 #include "../include/dicttrie.h"
@@ -27,7 +26,7 @@ extern "C" {
     using namespace ime_pinyin;
 
     // The maximum number of the prediction items.
-    static const size_t kMaxPredictNum = 500;
+    static const Size_t kMaxPredictNum = 500;
 
     // Used to search Pinyin string and give the best candidate.
     MatrixSearch *matrix_search = NULL;
@@ -62,7 +61,7 @@ extern "C" {
         matrix_search = NULL;
     }
 
-    void im_set_max_lens ( size_t max_sps_len, size_t max_hzs_len ) {
+    void im_set_max_lens ( Size_t max_sps_len, Size_t max_hzs_len ) {
         if ( NULL != matrix_search ) {
             matrix_search->set_max_lens ( max_sps_len, max_hzs_len );
         }
@@ -74,14 +73,14 @@ extern "C" {
     }
 
     // To be updated.
-    size_t im_search ( const char *pybuf, size_t pylen ) {
+    Size_t im_search ( const char *pybuf, Size_t pylen ) {
         if ( NULL == matrix_search )
         { return 0; }
         matrix_search->search ( pybuf, pylen );
         return matrix_search->get_candidate_num();
     }
 
-    size_t im_delsearch ( size_t pos, bool is_pos_in_splid,
+    Size_t im_delsearch ( Size_t pos, bool is_pos_in_splid,
                           bool clear_fixed_this_step ) {
         if ( NULL == matrix_search )
         { return 0; }
@@ -96,42 +95,45 @@ extern "C" {
     }
 
     // To be removed
-    size_t im_add_letter ( char ch ) {
+    Size_t im_add_letter ( char ch ) {
         return 0;
     }
 
-    const char *im_get_sps_str ( size_t *decoded_len ) {
+    const char *im_get_sps_str ( Size_t *decoded_len )
+    {
         if ( NULL == matrix_search )
-        { return NULL; }
+        {
+            return NULL;
+        }
         return matrix_search->get_pystr ( decoded_len );
     }
 
-    char16 *im_get_candidate ( size_t cand_id, char16 *cand_str,
-                               size_t max_len ) {
+    char16 *im_get_candidate ( Size_t cand_id, char16 *cand_str,
+                               Size_t max_len ) {
         if ( NULL == matrix_search )
         { return NULL; }
         return matrix_search->get_candidate ( cand_id, cand_str, max_len );
     }
 
-    size_t im_get_spl_start_pos ( const uint16 *&spl_start ) {
+    Size_t im_get_spl_start_pos ( const uint16 *&spl_start ) {
         if ( NULL == matrix_search )
         { return 0; }
         return matrix_search->get_spl_start ( spl_start );
     }
 
-    size_t im_choose ( size_t choice_id ) {
+    Size_t im_choose ( Size_t choice_id ) {
         if ( NULL == matrix_search )
         { return 0; }
         return matrix_search->choose ( choice_id );
     }
 
-    size_t im_cancel_last_choice() {
+    Size_t im_cancel_last_choice() {
         if ( NULL == matrix_search )
         { return 0; }
         return matrix_search->cancel_last_choice();
     }
 
-    size_t im_get_fixed_len() {
+    Size_t im_get_fixed_len() {
         if ( NULL == matrix_search )
         { return 0; }
         return matrix_search->get_fixedlen();
@@ -143,11 +145,11 @@ extern "C" {
     }
 
 
-    size_t im_get_predicts ( const char16 *his_buf,
+    Size_t im_get_predicts ( const char16 *his_buf,
                              char16 ( *&pre_buf ) [kMaxPredictSize + 1] ) {
         if ( NULL == his_buf )
         { return 0; }
-        size_t fixed_len = utf16_strlen ( his_buf );
+        Size_t fixed_len = utf16_strlen ( his_buf );
         const char16 *fixed_ptr = his_buf;
         if ( fixed_len > kMaxPredictSize ) {
             fixed_ptr += fixed_len - kMaxPredictSize;

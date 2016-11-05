@@ -39,12 +39,12 @@ namespace ime_pinyin {
                         ( static_cast<const RawSpelling *> ( p2 ) )->str );
     }
 
-    size_t get_odd_next ( size_t value ) {
-        size_t v_next = value;
+    Size_t get_odd_next ( Size_t value ) {
+        Size_t v_next = value;
         while ( true ) {
-            size_t v_next_sqrt = ( size_t ) sqrt ( v_next );
+            Size_t v_next_sqrt = ( Size_t ) sqrt ( v_next );
             bool is_odd = true;
-            for ( size_t v_dv = 2; v_dv < v_next_sqrt + 1; v_dv++ ) {
+            for ( Size_t v_dv = 2; v_dv < v_next_sqrt + 1; v_dv++ ) {
                 if ( v_next % v_dv == 0 ) {
                     is_odd = false;
                     break;
@@ -71,18 +71,18 @@ namespace ime_pinyin {
         free_resource();
     }
 
-    size_t SpellingTable::get_hash_pos ( const char *spelling_str ) {
-        size_t hash_pos = 0;
-        for ( size_t pos = 0; pos < spelling_size_; pos++ ) {
+    Size_t SpellingTable::get_hash_pos ( const char *spelling_str ) {
+        Size_t hash_pos = 0;
+        for ( Size_t pos = 0; pos < spelling_size_; pos++ ) {
             if ( '\0' == spelling_str[pos] )
             { break; }
-            hash_pos += ( size_t ) spelling_str[pos];
+            hash_pos += ( Size_t ) spelling_str[pos];
         }
         hash_pos = hash_pos % spelling_max_num_;
         return hash_pos;
     }
 
-    size_t SpellingTable::hash_pos_next ( size_t hash_pos ) {
+    Size_t SpellingTable::hash_pos_next ( Size_t hash_pos ) {
         hash_pos += 123;
         hash_pos = hash_pos % spelling_max_num_;
         return hash_pos;
@@ -97,7 +97,7 @@ namespace ime_pinyin {
         spelling_buf_ = NULL;
     }
 
-    bool SpellingTable::init_table ( size_t pure_spl_size, size_t spl_max_num,
+    bool SpellingTable::init_table ( Size_t pure_spl_size, Size_t spl_max_num,
                                      bool need_score ) {
         if ( pure_spl_size == 0 || spl_max_num == 0 )
         { return false; }
@@ -124,20 +124,20 @@ namespace ime_pinyin {
     bool SpellingTable::put_spelling ( const char *spelling_str, double freq ) {
         if ( frozen_ || NULL == spelling_str )
         { return false; }
-        for ( size_t pos = 0; pos < kNotSupportNum; pos++ ) {
+        for ( Size_t pos = 0; pos < kNotSupportNum; pos++ ) {
             if ( strcmp ( spelling_str, kNotSupportList[pos] ) == 0 ) {
                 return false;
             }
         }
         total_freq_ += freq;
-        size_t hash_pos = get_hash_pos ( spelling_str );
+        Size_t hash_pos = get_hash_pos ( spelling_str );
         raw_spellings_[hash_pos].str[spelling_size_ - 1] = '\0';
         if ( strncmp ( raw_spellings_[hash_pos].str, spelling_str,
                        spelling_size_ - 1 ) == 0 ) {
             raw_spellings_[hash_pos].freq += freq;
             return true;
         }
-        size_t hash_pos_ori = hash_pos;
+        Size_t hash_pos_ori = hash_pos;
         while ( true ) {
             if ( strncmp ( raw_spellings_[hash_pos].str,
                            spelling_str, spelling_size_ - 1 ) == 0 ) {
@@ -162,13 +162,13 @@ namespace ime_pinyin {
     bool SpellingTable::contain ( const char *spelling_str ) {
         if ( NULL == spelling_str || NULL == spelling_buf_ || frozen_ )
         { return false; }
-        size_t hash_pos = get_hash_pos ( spelling_str );
+        Size_t hash_pos = get_hash_pos ( spelling_str );
         if ( '\0' == raw_spellings_[hash_pos].str[0] )
         { return false; }
         if ( strncmp ( raw_spellings_[hash_pos].str, spelling_str, spelling_size_ - 1 )
              == 0 )
         { return true; }
-        size_t hash_pos_ori = hash_pos;
+        Size_t hash_pos_ori = hash_pos;
         while ( true ) {
             hash_pos = hash_pos_next ( hash_pos );
             if ( hash_pos_ori == hash_pos )
@@ -183,7 +183,7 @@ namespace ime_pinyin {
         return false;
     }
 
-    const char *SpellingTable::arrange ( size_t *item_size, size_t *spl_num ) {
+    const char *SpellingTable::arrange ( Size_t *item_size, Size_t *spl_num ) {
         if ( NULL == raw_spellings_ || NULL == spelling_buf_ ||
              NULL == item_size || NULL == spl_num )
         { return NULL; }
@@ -191,7 +191,7 @@ namespace ime_pinyin {
                 compare_raw_spl_eb );
         // After sorting, only the first spelling_num_ items are valid.
         // Copy them to the destination buffer.
-        for ( size_t pos = 0; pos < spelling_num_; pos++ ) {
+        for ( Size_t pos = 0; pos < spelling_num_; pos++ ) {
             strncpy ( spelling_buf_ + pos * spelling_size_, raw_spellings_[pos].str,
                       spelling_size_ );
         }
@@ -201,7 +201,7 @@ namespace ime_pinyin {
             double max_score = 0;
             double min_score = 0;
             // After sorting, only the first spelling_num_ items are valid.
-            for ( size_t pos = 0; pos < spelling_num_; pos++ ) {
+            for ( Size_t pos = 0; pos < spelling_num_; pos++ ) {
                 raw_spellings_[pos].freq /= total_freq_;
                 if ( need_score_ ) {
                     if ( 0 == pos ) {
@@ -226,7 +226,7 @@ namespace ime_pinyin {
             // both of them are negative after log function.
             score_amplifier_ = 1.0 * 255 / min_score;
             double average_score = 0;
-            for ( size_t pos = 0; pos < spelling_num_; pos++ ) {
+            for ( Size_t pos = 0; pos < spelling_num_; pos++ ) {
                 double score = log ( raw_spellings_[pos].freq ) * score_amplifier_;
                 assert ( score >= 0 );
                 average_score += score;

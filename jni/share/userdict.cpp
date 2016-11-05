@@ -317,7 +317,7 @@ namespace ime_pinyin {
         return true;
     }
 
-    size_t UserDict::number_of_lemmas() {
+    Size_t UserDict::number_of_lemmas() {
         return dict_info_.lemma_count;
     }
 
@@ -328,7 +328,7 @@ namespace ime_pinyin {
     MileStoneHandle UserDict::extend_dict ( MileStoneHandle from_handle,
                                             const DictExtPara *dep,
                                             LmaPsbItem *lpi_items,
-                                            size_t lpi_max, size_t *lpi_num ) {
+                                            Size_t lpi_max, Size_t *lpi_num ) {
         if ( is_valid_state() == false )
         { return 0; }
         bool need_extend = false;
@@ -464,14 +464,14 @@ namespace ime_pinyin {
         }
     }
 
-    size_t UserDict::get_lpis ( const uint16 *splid_str, uint16 splid_str_len,
-                                LmaPsbItem *lpi_items, size_t lpi_max ) {
+    Size_t UserDict::get_lpis ( const uint16 *splid_str, uint16 splid_str_len,
+                                LmaPsbItem *lpi_items, Size_t lpi_max ) {
         return _get_lpis ( splid_str, splid_str_len, lpi_items, lpi_max, NULL );
     }
 
-    size_t UserDict::_get_lpis ( const uint16 *splid_str,
+    Size_t UserDict::_get_lpis ( const uint16 *splid_str,
                                  uint16 splid_str_len, LmaPsbItem *lpi_items,
-                                 size_t lpi_max, bool *need_extend ) {
+                                 Size_t lpi_max, bool *need_extend ) {
         bool tmp_extend;
         if ( !need_extend )
         { need_extend = &tmp_extend; }
@@ -516,10 +516,10 @@ namespace ime_pinyin {
 #endif
             return 0;
         }
-        size_t lpi_current = 0;
+        Size_t lpi_current = 0;
         bool fuzzy_break = false;
         bool prefix_break = false;
-        while ( ( size_t ) middle < max_off && !fuzzy_break && !prefix_break ) {
+        while ( ( Size_t ) middle < max_off && !fuzzy_break && !prefix_break ) {
             if ( lpi_current >= lpi_max )
             { break; }
             uint32 offset = offsets_[middle];
@@ -595,9 +595,9 @@ namespace ime_pinyin {
         return i;
     }
 
-    size_t UserDict::predict ( const char16 last_hzs[], uint16 hzs_len,
-                               NPredictItem *npre_items, size_t npre_max,
-                               size_t b4_used ) {
+    Size_t UserDict::predict ( const char16 last_hzs[], uint16 hzs_len,
+                               NPredictItem *npre_items, Size_t npre_max,
+                               Size_t b4_used ) {
         uint32 new_added = 0;
 #ifdef ___PREDICT_ENABLED___
         int32 end = dict_info_.lemma_count - 1;
@@ -929,7 +929,7 @@ namespace ime_pinyin {
             return false;
         }
         uint32 version = kUserDictVersion;
-        size_t wred = fwrite ( &version, 1, 4, fp );
+        Size_t wred = fwrite ( &version, 1, 4, fp );
         UserDictInfo info;
         memset ( &info, 0, sizeof ( info ) );
         // By default, no limitation for lemma count and size
@@ -951,8 +951,8 @@ namespace ime_pinyin {
         if ( !fp ) {
             return false;
         }
-        size_t size;
-        size_t readed;
+        Size_t size;
+        Size_t readed;
         uint32 version;
         UserDictInfo dict_info;
         // validate
@@ -1004,7 +1004,7 @@ namespace ime_pinyin {
             pthread_mutex_unlock ( &g_mutex_ );
             return false;
         }
-        size_t readed, toread;
+        Size_t readed, toread;
         UserDictInfo dict_info;
         uint8 *lemmas = NULL;
         uint32 *offsets = NULL;
@@ -1017,7 +1017,7 @@ namespace ime_pinyin {
 #ifdef ___PREDICT_ENABLED___
         uint32 *predicts = NULL;
 #endif
-        size_t i;
+        Size_t i;
         int err;
         err = fseek ( fp, -1 * sizeof ( dict_info ), SEEK_END );
         if ( err ) { goto error; }
@@ -1210,7 +1210,7 @@ namespace ime_pinyin {
         if ( err == -1 )
         { return; }
         // New lemmas are always appended, no need to write whole lemma block
-        size_t need_write = kUserDictPreAlloc *
+        Size_t need_write = kUserDictPreAlloc *
                             ( 2 + ( kUserDictAverageNchar << 2 ) ) - lemma_size_left_;
         err = lseek ( fd, dict_info_.lemma_size - need_write, SEEK_CUR );
         if ( err == -1 )
@@ -1395,8 +1395,8 @@ namespace ime_pinyin {
         if ( is_valid_state() == false )
         { return; }
         // Fixup offsets_, set REMOVE flag to lemma's flag if needed
-        size_t first_freed = 0;
-        size_t first_inuse = 0;
+        Size_t first_freed = 0;
+        Size_t first_inuse = 0;
         while ( first_freed < dict_info_.lemma_count ) {
             // Find first freed offset
             while ( ( offsets_[first_freed] & kUserDictOffsetFlagRemove ) == 0 &&
@@ -1468,12 +1468,12 @@ namespace ime_pinyin {
 #endif
         dict_info_.lemma_count = first_freed;
         // Fixup lemmas_
-        size_t begin = 0;
-        size_t end = 0;
-        size_t dst = 0;
+        Size_t begin = 0;
+        Size_t end = 0;
+        Size_t dst = 0;
         int total_size = dict_info_.lemma_size + lemma_size_left_;
         int total_count = dict_info_.lemma_count + lemma_count_left_;
-        size_t real_size = total_size - lemma_size_left_;
+        Size_t real_size = total_size - lemma_size_left_;
         while ( dst < real_size ) {
             unsigned char flag = get_lemma_flag ( dst );
             unsigned char nchr = get_lemma_nchar ( dst );
@@ -1509,7 +1509,7 @@ namespace ime_pinyin {
                 break;
             }
             memmove ( lemmas_ + dst, lemmas_ + begin, end - begin );
-            for ( size_t j = 0; j < dict_info_.lemma_count; j++ ) {
+            for ( Size_t j = 0; j < dict_info_.lemma_count; j++ ) {
                 if ( offsets_[j] >= begin && offsets_[j] < end ) {
                     offsets_[j] -= ( begin - dst );
                     offsets_by_id_[ids_[j] - start_id_] = offsets_[j];
@@ -1521,7 +1521,7 @@ namespace ime_pinyin {
 #endif
             }
 #ifdef ___SYNC_ENABLED___
-            for ( size_t j = 0; j < dict_info_.sync_count; j++ ) {
+            for ( Size_t j = 0; j < dict_info_.sync_count; j++ ) {
                 if ( syncs_[j] >= begin && syncs_[j] < end ) {
                     syncs_[j] -= ( begin - dst );
                 }
@@ -1933,7 +1933,7 @@ namespace ime_pinyin {
             }
             int flushed = 0;
             if ( lemma_count_left_ == 0 ||
-                 lemma_size_left_ < ( size_t ) ( 2 + ( lemma_len << 2 ) ) ) {
+                 lemma_size_left_ < ( Size_t ) ( 2 + ( lemma_len << 2 ) ) ) {
                 // XXX When there is no space for new lemma, we flush to disk
                 // flush_cache() may be called by upper user
                 // and better place shoule be found instead of here
@@ -2015,23 +2015,23 @@ namespace ime_pinyin {
         return 0;
     }
 
-    size_t UserDict::get_total_lemma_count() {
+    Size_t UserDict::get_total_lemma_count() {
         return dict_info_.total_nfreq;
     }
 
-    void UserDict::set_total_lemma_count_of_others ( size_t count ) {
+    void UserDict::set_total_lemma_count_of_others ( Size_t count ) {
         total_other_nfreq_ = count;
     }
 
     LemmaIdType UserDict::append_a_lemma ( char16 lemma_str[], uint16 splids[],
                                            uint16 lemma_len, uint16 count, uint64 lmt ) {
         LemmaIdType id = get_max_lemma_id() + 1;
-        size_t offset = dict_info_.lemma_size;
+        Size_t offset = dict_info_.lemma_size;
         if ( offset > kUserDictOffsetMask )
         { return 0; }
         lemmas_[offset] = 0;
         lemmas_[offset + 1] = ( uint8 ) lemma_len;
-        for ( size_t i = 0; i < lemma_len; i++ ) {
+        for ( Size_t i = 0; i < lemma_len; i++ ) {
             * ( ( uint16 * ) &lemmas_[offset + 2 + ( i << 1 )] ) = splids[i];
             * ( ( char16 * ) &lemmas_[offset + 2 + ( lemma_len << 1 ) + ( i << 1 )] )
                 = lemma_str[i];
@@ -2051,7 +2051,7 @@ namespace ime_pinyin {
         // Sort
         UserDictSearchable searchable;
         prepare_locate ( &searchable, splids, lemma_len );
-        size_t i = 0;
+        Size_t i = 0;
         while ( i < off ) {
             offset = offsets_[i];
             uint32 nchar = get_lemma_nchar ( offset );

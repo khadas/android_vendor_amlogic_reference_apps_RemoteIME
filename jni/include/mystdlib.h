@@ -18,14 +18,14 @@
 #define PINYINIME_INCLUDE_MYSTDLIB_H__
 
 #include <stdlib.h>
-
+#include "./utf16char.h"
 namespace ime_pinyin {
 
-    void myqsort ( void *p, size_t n, size_t es,
+    void myqsort ( void *p, Size_t n, Size_t es,
                    int ( *cmp ) ( const void *, const void * ) );
 
     void *mybsearch ( const void *key, const void *base,
-                      size_t nmemb, size_t size,
+                      Size_t nmemb, Size_t size,
                       int ( *compar ) ( const void *, const void * ) );
 }
 

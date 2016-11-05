@@ -37,7 +37,7 @@ namespace ime_pinyin {
     }
 
 
-    bool Utf16Reader::open ( const char *filename, size_t buffer_len ) {
+    bool Utf16Reader::open ( const char *filename, Size_t buffer_len ) {
         if ( filename == NULL )
         { return false; }
         if ( buffer_len < MIN_BUF_LEN )
@@ -62,10 +62,10 @@ namespace ime_pinyin {
         return true;
     }
 
-    char16 *Utf16Reader::readline ( char16 *read_buf, size_t max_len ) {
+    char16 *Utf16Reader::readline ( char16 *read_buf, Size_t max_len ) {
         if ( NULL == fp_ || NULL == read_buf || 0 == max_len )
         { return NULL; }
-        size_t ret_len = 0;
+        Size_t ret_len = 0;
         do {
             if ( buffer_valid_len_ == 0 ) {
                 buffer_next_pos_ = 0;
@@ -78,7 +78,7 @@ namespace ime_pinyin {
                     return read_buf;
                 }
             }
-            for ( size_t i = 0; i < buffer_valid_len_; i++ ) {
+            for ( Size_t i = 0; i < buffer_valid_len_; i++ ) {
                 if ( i == max_len - 1 ||
                      buffer_[buffer_next_pos_ + i] == ( char16 ) '\n' ) {
                     if ( ret_len + i > 0 && read_buf[ret_len + i - 1] == ( char16 ) '\r' ) {

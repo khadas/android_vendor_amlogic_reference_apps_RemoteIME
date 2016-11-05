@@ -30,8 +30,8 @@ namespace ime_pinyin {
 
     // Type used to express a lemma and its probability score.
     typedef struct {
-    size_t id: ( kLemmaIdSize * 8 );
-        size_t lma_len: 4;
+    Size_t id: ( kLemmaIdSize * 8 );
+        Size_t lma_len: 4;
         uint16 psb;  // The score, the lower psb, the higher possibility.
         // For single character items, we may also need Hanzi.
         // For multiple characer items, ignore it.
@@ -133,9 +133,9 @@ namespace ime_pinyin {
     int cmp_npre_by_hanzi_score ( const void *p1, const void *p2 );
 
 
-    size_t remove_duplicate_npre ( NPredictItem *npre_items, size_t npre_num );
+    Size_t remove_duplicate_npre ( NPredictItem *npre_items, Size_t npre_num );
 
-    size_t align_to_size_t ( size_t size );
+    Size_t align_to_Size_t ( Size_t size );
 
 }  // namespace
 

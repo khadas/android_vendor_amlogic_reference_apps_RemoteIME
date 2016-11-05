@@ -26,11 +26,11 @@ namespace ime_pinyin {
         private:
             FILE *fp_;
             char16 *buffer_;
-            size_t buffer_total_len_;
-            size_t buffer_next_pos_;
+            Size_t buffer_total_len_;
+            Size_t buffer_next_pos_;
 
             // Always less than buffer_total_len_ - buffer_next_pos_
-            size_t buffer_valid_len_;
+            Size_t buffer_valid_len_;
 
         public:
             Utf16Reader();
@@ -39,8 +39,8 @@ namespace ime_pinyin {
             // filename is the name of the file to open.
             // buffer_len specifies how long buffer should be allocated to speed up the
             // future reading
-            bool open ( const char *filename, size_t buffer_len );
-            char16 *readline ( char16 *read_buf, size_t max_len );
+            bool open ( const char *filename, Size_t buffer_len );
+            char16 *readline ( char16 *read_buf, Size_t max_len );
             bool close();
     };
 }

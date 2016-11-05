@@ -48,8 +48,8 @@ namespace ime_pinyin {
         // The real unified psb is psb1 / lma_len1 and psb2 * lma_len2
         // But we use psb1 * lma_len2 and psb2 * lma_len1 to get better
         // precision.
-        size_t up1 = item1->psb * ( item2->lma_len );
-        size_t up2 = item2->psb * ( item1->lma_len );
+        Size_t up1 = item1->psb * ( item2->lma_len );
+        Size_t up2 = item2->psb * ( item1->lma_len );
         if ( up1 < up2 ) {
             return -1;
         }
@@ -170,12 +170,12 @@ namespace ime_pinyin {
         return 0;
     }
 
-    size_t remove_duplicate_npre ( NPredictItem *npre_items, size_t npre_num ) {
+    Size_t remove_duplicate_npre ( NPredictItem *npre_items, Size_t npre_num ) {
         if ( NULL == npre_items || 0 == npre_num )
         { return 0; }
         myqsort ( npre_items, npre_num, sizeof ( NPredictItem ), cmp_npre_by_hanzi_score );
-        size_t remain_num = 1;  // The first one is reserved.
-        for ( size_t pos = 1; pos < npre_num; pos++ ) {
+        Size_t remain_num = 1;  // The first one is reserved.
+        for ( Size_t pos = 1; pos < npre_num; pos++ ) {
             if ( utf16_strncmp ( npre_items[pos].pre_hzs,
                                  npre_items[remain_num - 1].pre_hzs,
                                  kMaxPredictSize ) != 0 ) {
@@ -188,8 +188,8 @@ namespace ime_pinyin {
         return remain_num;
     }
 
-    size_t align_to_size_t ( size_t size ) {
-        size_t s = sizeof ( size_t );
+    Size_t align_to_Size_t ( Size_t size ) {
+        Size_t s = sizeof ( Size_t );
         return ( size + s - 1 ) / s * s;
     }
 

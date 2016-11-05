@@ -24,7 +24,7 @@ namespace ime_pinyin {
 
 #ifdef ___BUILD_MODEL___
 
-    const size_t kMaxSpellingSize = kMaxPinyinSize;
+    const Size_t kMaxSpellingSize = kMaxPinyinSize;
 
     typedef struct {
         char str[kMaxSpellingSize + 1];
@@ -37,12 +37,12 @@ namespace ime_pinyin {
     // we only keep its first spelling_size_ chars.
     class SpellingTable {
         private:
-            static const size_t kNotSupportNum = 3;
+            static const Size_t kNotSupportNum = 3;
             static const char kNotSupportList[kNotSupportNum][kMaxSpellingSize + 1];
 
             bool need_score_;
 
-            size_t spelling_max_num_;
+            Size_t spelling_max_num_;
 
             RawSpelling *raw_spellings_;
 
@@ -54,7 +54,7 @@ namespace ime_pinyin {
 
             double total_freq_;
 
-            size_t spelling_num_;
+            Size_t spelling_num_;
 
             double score_amplifier_;
 
@@ -63,8 +63,8 @@ namespace ime_pinyin {
             // If frozen is true, put_spelling() and contain() are not allowed to call.
             bool frozen_;
 
-            size_t get_hash_pos ( const char *spelling_str );
-            size_t hash_pos_next ( size_t hash_pos );
+            Size_t get_hash_pos ( const char *spelling_str );
+            Size_t hash_pos_next ( Size_t hash_pos );
             void free_resource();
         public:
             SpellingTable();
@@ -75,7 +75,7 @@ namespace ime_pinyin {
             // spl_max_num is the maximum number of spelling strings to store.
             // need_score is used to indicate whether the caller needs to calculate a
             // score for each spelling.
-            bool init_table ( size_t pure_spl_size, size_t spl_max_num, bool need_score );
+            bool init_table ( Size_t pure_spl_size, Size_t spl_max_num, bool need_score );
 
             // Put a spelling string to the table.
             // It always returns false if called after arrange() withtout a new
@@ -99,7 +99,7 @@ namespace ime_pinyin {
             // unsinged char score.
             // An item with a lower score has a higher probability.
             // Do not call put_spelling() and contains() after arrange().
-            const char *arrange ( size_t *item_size, size_t *spl_num );
+            const char *arrange ( Size_t *item_size, Size_t *spl_num );
 
             float get_score_amplifier();
 

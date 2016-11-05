@@ -23,13 +23,13 @@ namespace ime_pinyin {
     extern "C" {
 #endif
 
-        char16 *utf16_strtok ( char16 *utf16_str, size_t *token_size,
+        char16 *utf16_strtok ( char16 *utf16_str, Size_t *token_size,
                                char16 **utf16_str_next ) {
             if ( NULL == utf16_str || NULL == token_size || NULL == utf16_str_next ) {
                 return NULL;
             }
             // Skip the splitters
-            size_t pos = 0;
+            Size_t pos = 0;
             while ( ( char16 ) ' ' == utf16_str[pos] || ( char16 ) '\n' == utf16_str[pos]
                     || ( char16 ) '\t' == utf16_str[pos] )
             { pos++; }
@@ -58,7 +58,7 @@ namespace ime_pinyin {
             { return 0; }
             int value = 0;
             int sign = 1;
-            size_t pos = 0;
+            Size_t pos = 0;
             if ( ( char16 ) '-' == utf16_str[pos] ) {
                 sign = -1;
                 pos++;
@@ -79,24 +79,24 @@ namespace ime_pinyin {
             return atof ( char8 );
         }
 
-        size_t utf16_strlen ( const char16 *utf16_str ) {
+        Size_t utf16_strlen ( const char16 *utf16_str ) {
             if ( NULL == utf16_str )
             { return 0; }
-            size_t size = 0;
+            Size_t size = 0;
             while ( ( char16 ) '\0' != utf16_str[size] )
             { size++; }
             return size;
         }
 
         int utf16_strcmp ( const char16 *str1, const char16 *str2 ) {
-            size_t pos = 0;
+            Size_t pos = 0;
             while ( str1[pos] == str2[pos] && ( char16 ) '\0' != str1[pos] )
             { pos++; }
             return static_cast<int> ( str1[pos] ) - static_cast<int> ( str2[pos] );
         }
 
-        int utf16_strncmp ( const char16 *str1, const char16 *str2, size_t size ) {
-            size_t pos = 0;
+        int utf16_strncmp ( const char16 *str1, const char16 *str2, Size_t size ) {
+            Size_t pos = 0;
             while ( pos < size && str1[pos] == str2[pos] && ( char16 ) '\0' != str1[pos] )
             { pos++; }
             if ( pos == size )
@@ -118,7 +118,7 @@ namespace ime_pinyin {
             return dst;
         }
 
-        char16 *utf16_strncpy ( char16 *dst, const char16 *src, size_t size ) {
+        char16 *utf16_strncpy ( char16 *dst, const char16 *src, Size_t size ) {
             if ( NULL == src || NULL == dst || 0 == size )
             { return NULL; }
             if ( src == dst )

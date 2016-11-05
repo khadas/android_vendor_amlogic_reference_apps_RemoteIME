@@ -33,8 +33,8 @@ namespace ime_pinyin {
 
 #ifdef ___BUILD_MODEL___
 
-    static const size_t kReadBufLen = 512;
-    static const size_t kSplTableHashLen = 2000;
+    static const Size_t kReadBufLen = 512;
+    static const Size_t kSplTableHashLen = 2000;
 
     // Compare a SingleCharItem, first by Hanzis, then by spelling ids, then by
     // frequencies.
@@ -81,8 +81,8 @@ namespace ime_pinyin {
     }
 
     int cmp_lemma_entry_hzs ( const void *p1, const void *p2 ) {
-        size_t size1 = utf16_strlen ( ( ( const LemmaEntry * ) p1 )->hanzi_str );
-        size_t size2 = utf16_strlen ( ( ( const LemmaEntry * ) p2 )->hanzi_str );
+        Size_t size1 = utf16_strlen ( ( ( const LemmaEntry * ) p1 )->hanzi_str );
+        Size_t size2 = utf16_strlen ( ( ( const LemmaEntry * ) p2 )->hanzi_str );
         if ( size1 < size2 )
         { return -1; }
         else if ( size1 > size2 )
@@ -110,8 +110,8 @@ namespace ime_pinyin {
 
     // First hanzi, if the same, then Pinyin
     int cmp_lemma_entry_hzspys ( const void *p1, const void *p2 ) {
-        size_t size1 = utf16_strlen ( ( ( const LemmaEntry * ) p1 )->hanzi_str );
-        size_t size2 = utf16_strlen ( ( ( const LemmaEntry * ) p2 )->hanzi_str );
+        Size_t size1 = utf16_strlen ( ( ( const LemmaEntry * ) p1 )->hanzi_str );
+        Size_t size2 = utf16_strlen ( ( ( const LemmaEntry * ) p2 )->hanzi_str );
         if ( size1 < size2 )
         { return -1; }
         else if ( size1 > size2 )
@@ -153,7 +153,7 @@ namespace ime_pinyin {
         free_resource();
     }
 
-    bool DictBuilder::alloc_resource ( size_t lma_num ) {
+    bool DictBuilder::alloc_resource ( Size_t lma_num ) {
         if ( 0 == lma_num )
         { return false; }
         free_resource();
@@ -189,7 +189,7 @@ namespace ime_pinyin {
         return true;
     }
 
-    char16 *DictBuilder::read_valid_hanzis ( const char *fn_validhzs, size_t *num ) {
+    char16 *DictBuilder::read_valid_hanzis ( const char *fn_validhzs, Size_t *num ) {
         if ( NULL == fn_validhzs || NULL == num )
         { return NULL; }
         *num = 0;
@@ -222,7 +222,7 @@ namespace ime_pinyin {
         return hzs;
     }
 
-    bool DictBuilder::hz_in_hanzis_list ( const char16 *hzs, size_t hzs_len,
+    bool DictBuilder::hz_in_hanzis_list ( const char16 *hzs, Size_t hzs_len,
                                           char16 hz ) {
         if ( NULL == hzs )
         { return false; }
@@ -236,11 +236,11 @@ namespace ime_pinyin {
     }
 
     // The caller makes sure that the parameters are valid.
-    bool DictBuilder::str_in_hanzis_list ( const char16 *hzs, size_t hzs_len,
-                                           const char16 *str, size_t str_len ) {
+    bool DictBuilder::str_in_hanzis_list ( const char16 *hzs, Size_t hzs_len,
+                                           const char16 *str, Size_t str_len ) {
         if ( NULL == hzs || NULL == str )
         { return false; }
-        for ( size_t pos = 0; pos < str_len; pos++ ) {
+        for ( Size_t pos = 0; pos < str_len; pos++ ) {
             if ( !hz_in_hanzis_list ( hzs, hzs_len, str[pos] ) )
             { return false; }
         }
@@ -251,7 +251,7 @@ namespace ime_pinyin {
         top_lmas_num_ = 0;
         if ( NULL == lemma_arr_ )
         { return; }
-        for ( size_t pos = 0; pos < lemma_num_; pos++ ) {
+        for ( Size_t pos = 0; pos < lemma_num_; pos++ ) {
             if ( 0 == top_lmas_num_ ) {
                 top_lmas_[0] = lemma_arr_[pos];
                 top_lmas_num_ = 1;
@@ -260,7 +260,7 @@ namespace ime_pinyin {
             if ( lemma_arr_[pos].freq > top_lmas_[top_lmas_num_ - 1].freq ) {
                 if ( kTopScoreLemmaNum > top_lmas_num_ )
                 { top_lmas_num_ += 1; }
-                size_t move_pos;
+                Size_t move_pos;
                 for ( move_pos = top_lmas_num_ - 1; move_pos > 0; move_pos-- ) {
                     top_lmas_[move_pos] = top_lmas_[move_pos - 1];
                     if ( 0 == move_pos - 1 ||
@@ -278,7 +278,7 @@ namespace ime_pinyin {
         }
         if ( kPrintDebug0 ) {
             printf ( "\n------Top Lemmas------------------\n" );
-            for ( size_t pos = 0; pos < top_lmas_num_; pos++ ) {
+            for ( Size_t pos = 0; pos < top_lmas_num_; pos++ ) {
                 printf ( "--%d, idx:%06d, score:%.5f\n", pos, top_lmas_[pos].idx_by_hz,
                          top_lmas_[pos].freq );
             }
@@ -314,32 +314,32 @@ namespace ime_pinyin {
         homo_idx_num_gt1_ = 0;
     }
 
-    size_t DictBuilder::read_raw_dict ( const char *fn_raw,
+    Size_t DictBuilder::read_raw_dict ( const char *fn_raw,
                                         const char *fn_validhzs,
-                                        size_t max_item ) {
+                                        Size_t max_item ) {
         if ( NULL == fn_raw ) { return 0; }
         Utf16Reader utf16_reader;
         if ( !utf16_reader.open ( fn_raw, kReadBufLen * 10 ) )
         { return false; }
         char16 read_buf[kReadBufLen];
         // Read the number of lemmas in the file
-        size_t lemma_num = 240000;
+        Size_t lemma_num = 240000;
         // allocate resource required
         if ( !alloc_resource ( lemma_num ) ) {
             utf16_reader.close();
         }
         // Read the valid Hanzi list.
         char16 *valid_hzs = NULL;
-        size_t valid_hzs_num = 0;
+        Size_t valid_hzs_num = 0;
         valid_hzs = read_valid_hanzis ( fn_validhzs, &valid_hzs_num );
         // Begin reading the lemma entries
-        for ( size_t i = 0; i < max_item; i++ ) {
+        for ( Size_t i = 0; i < max_item; i++ ) {
             // read next entry
             if ( !utf16_reader.readline ( read_buf, kReadBufLen ) ) {
                 lemma_num = i;
                 break;
             }
-            size_t token_size;
+            Size_t token_size;
             char16 *token;
             char16 *to_tokenize = read_buf;
             // Get the Hanzi string
@@ -349,7 +349,7 @@ namespace ime_pinyin {
                 utf16_reader.close();
                 return false;
             }
-            size_t lemma_size = utf16_strlen ( token );
+            Size_t lemma_size = utf16_strlen ( token );
             if ( lemma_size > kMaxLemmaSize ) {
                 i--;
                 continue;
@@ -393,7 +393,7 @@ namespace ime_pinyin {
             }
             // Get spelling String
             bool spelling_not_support = false;
-            for ( size_t hz_pos = 0; hz_pos < ( size_t ) lemma_arr_[i].hz_str_len;
+            for ( Size_t hz_pos = 0; hz_pos < ( Size_t ) lemma_arr_[i].hz_str_len;
                   hz_pos++ ) {
                 // Get a Pinyin
                 token = utf16_strtok ( to_tokenize, &token_size, &to_tokenize );
@@ -437,8 +437,8 @@ namespace ime_pinyin {
         // The size of an spelling. '\0' is included. If the spelling table is
         // initialized to calculate the spelling scores, the last char in the
         // spelling string will be score, and it is also included in spl_item_size.
-        size_t spl_item_size;
-        size_t spl_num;
+        Size_t spl_item_size;
+        Size_t spl_num;
         const char *spl_buf;
         spl_buf = spl_table_->arrange ( &spl_item_size, &spl_num );
         if ( NULL == spl_buf ) {
@@ -454,8 +454,8 @@ namespace ime_pinyin {
         }
         printf ( "spelling tree construct successfully.\n" );
         // Convert the spelling string to idxs
-        for ( size_t i = 0; i < lemma_num_; i++ ) {
-            for ( size_t hz_pos = 0; hz_pos < ( size_t ) lemma_arr_[i].hz_str_len;
+        for ( Size_t i = 0; i < lemma_num_; i++ ) {
+            for ( Size_t hz_pos = 0; hz_pos < ( Size_t ) lemma_arr_[i].hz_str_len;
                   hz_pos++ ) {
                 uint16 spl_idxs[2];
                 uint16 spl_start_pos[3];
@@ -504,7 +504,7 @@ namespace ime_pinyin {
         // Move the node data and homo data to the DictTrie
         dict_trie->root_ = new LmaNodeLE0[lma_nds_used_num_le0_];
         dict_trie->nodes_ge1_ = new LmaNodeGE1[lma_nds_used_num_ge1_];
-        size_t lma_idx_num = homo_idx_num_eq1_ + homo_idx_num_gt1_ + top_lmas_num_;
+        Size_t lma_idx_num = homo_idx_num_eq1_ + homo_idx_num_gt1_ + top_lmas_num_;
         dict_trie->lma_idx_buf_ = new unsigned char[lma_idx_num * kLemmaIdSize];
         assert ( NULL != dict_trie->root_ );
         assert ( NULL != dict_trie->lma_idx_buf_ );
@@ -516,11 +516,11 @@ namespace ime_pinyin {
                  sizeof ( LmaNodeLE0 ) * lma_nds_used_num_le0_ );
         memcpy ( dict_trie->nodes_ge1_, lma_nodes_ge1_,
                  sizeof ( LmaNodeGE1 ) * lma_nds_used_num_ge1_ );
-        for ( size_t pos = 0; pos < homo_idx_num_eq1_ + homo_idx_num_gt1_; pos++ ) {
+        for ( Size_t pos = 0; pos < homo_idx_num_eq1_ + homo_idx_num_gt1_; pos++ ) {
             id_to_charbuf ( dict_trie->lma_idx_buf_ + pos * kLemmaIdSize,
                             homo_idx_buf_[pos] );
         }
-        for ( size_t pos = homo_idx_num_eq1_ + homo_idx_num_gt1_;
+        for ( Size_t pos = homo_idx_num_eq1_ + homo_idx_num_gt1_;
               pos < lma_idx_num; pos++ ) {
             LemmaIdType idx =
                 top_lmas_[pos - homo_idx_num_eq1_ - homo_idx_num_gt1_].idx_by_hz;
@@ -540,17 +540,17 @@ namespace ime_pinyin {
 
     void DictBuilder::id_to_charbuf ( unsigned char *buf, LemmaIdType id ) {
         if ( NULL == buf ) { return; }
-        for ( size_t pos = 0; pos < kLemmaIdSize; pos++ ) {
+        for ( Size_t pos = 0; pos < kLemmaIdSize; pos++ ) {
             ( buf ) [pos] = ( unsigned char ) ( id >> ( pos * 8 ) );
         }
     }
 
-    void DictBuilder::set_son_offset ( LmaNodeGE1 *node, size_t offset ) {
+    void DictBuilder::set_son_offset ( LmaNodeGE1 *node, Size_t offset ) {
         node->son_1st_off_l = static_cast<uint16> ( offset );
         node->son_1st_off_h = static_cast<unsigned char> ( offset >> 16 );
     }
 
-    void DictBuilder:: set_homo_id_buf_offset ( LmaNodeGE1 *node, size_t offset ) {
+    void DictBuilder:: set_homo_id_buf_offset ( LmaNodeGE1 *node, Size_t offset ) {
         node->homo_idx_buf_off_l = static_cast<uint16> ( offset );
         node->homo_idx_buf_off_h = static_cast<unsigned char> ( offset >> 16 );
     }
@@ -580,7 +580,7 @@ namespace ime_pinyin {
         myqsort ( lemma_arr_, lemma_num_, sizeof ( LemmaEntry ), cmp_lemma_entry_hzs );
         lemma_arr_[0].idx_by_hz = 1;
         LemmaIdType idx_max = 1;
-        for ( size_t i = 1; i < lemma_num_; i++ ) {
+        for ( Size_t i = 1; i < lemma_num_; i++ ) {
             if ( utf16_strcmp ( lemma_arr_[i].hanzi_str, lemma_arr_[i - 1].hanzi_str ) ) {
                 idx_max++;
                 lemma_arr_[i].idx_by_hz = idx_max;
@@ -592,7 +592,7 @@ namespace ime_pinyin {
         return idx_max + 1;
     }
 
-    size_t DictBuilder::build_scis() {
+    Size_t DictBuilder::build_scis() {
         if ( NULL == scis_ || lemma_num_ * kMaxLemmaSize > scis_num_ )
         { return 0; }
         SpellingTrie &spl_trie = SpellingTrie::get_instance();
@@ -603,9 +603,9 @@ namespace ime_pinyin {
         scis_[0].splid.half_splid = 0;
         scis_num_ = 1;
         // Copy the hanzis to the buffer
-        for ( size_t pos = 0; pos < lemma_num_; pos++ ) {
-            size_t hz_num = lemma_arr_[pos].hz_str_len;
-            for ( size_t hzpos = 0; hzpos < hz_num; hzpos++ ) {
+        for ( Size_t pos = 0; pos < lemma_num_; pos++ ) {
+            Size_t hz_num = lemma_arr_[pos].hz_str_len;
+            for ( Size_t hzpos = 0; hzpos < hz_num; hzpos++ ) {
                 scis_[scis_num_].hz = lemma_arr_[pos].hanzi_str[hzpos];
                 scis_[scis_num_].splid.full_splid = lemma_arr_[pos].spl_idx_arr[hzpos];
                 scis_[scis_num_].splid.half_splid =
@@ -619,8 +619,8 @@ namespace ime_pinyin {
         }
         myqsort ( scis_, scis_num_, sizeof ( SingleCharItem ), cmp_scis_hz_splid_freq );
         // Remove repeated items
-        size_t unique_scis_num = 1;
-        for ( size_t pos = 1; pos < scis_num_; pos++ ) {
+        Size_t unique_scis_num = 1;
+        for ( Size_t pos = 1; pos < scis_num_; pos++ ) {
             if ( scis_[pos].hz == scis_[pos - 1].hz &&
                  scis_[pos].splid.full_splid == scis_[pos - 1].splid.full_splid )
             { continue; }
@@ -631,9 +631,9 @@ namespace ime_pinyin {
         }
         scis_num_ = unique_scis_num;
         // Update the lemma list.
-        for ( size_t pos = 0; pos < lemma_num_; pos++ ) {
-            size_t hz_num = lemma_arr_[pos].hz_str_len;
-            for ( size_t hzpos = 0; hzpos < hz_num; hzpos++ ) {
+        for ( Size_t pos = 0; pos < lemma_num_; pos++ ) {
+            Size_t hz_num = lemma_arr_[pos].hz_str_len;
+            for ( Size_t hzpos = 0; hzpos < hz_num; hzpos++ ) {
                 SingleCharItem key;
                 key.hz = lemma_arr_[pos].hanzi_str[hzpos];
                 key.splid.full_splid = lemma_arr_[pos].spl_idx_arr[hzpos];
@@ -653,18 +653,18 @@ namespace ime_pinyin {
     }
 
     bool DictBuilder::construct_subset ( void *parent, LemmaEntry *lemma_arr,
-                                         size_t item_start, size_t item_end,
-                                         size_t level ) {
+                                         Size_t item_start, Size_t item_end,
+                                         Size_t level ) {
         if ( level >= kMaxLemmaSize || item_end <= item_start )
         { return false; }
         // 1. Scan for how many sons
-        size_t parent_son_num = 0;
+        Size_t parent_son_num = 0;
         // LemmaNode *son_1st = NULL;
         // parent.num_of_son = 0;
         LemmaEntry *lma_last_start = lemma_arr_ + item_start;
         uint16 spl_idx_node = lma_last_start->spl_idx_arr[level];
         // Scan for how many sons to be allocaed
-        for ( size_t i = item_start + 1; i < item_end; i++ ) {
+        for ( Size_t i = item_start + 1; i < item_end; i++ ) {
             LemmaEntry *lma_current = lemma_arr + i;
             uint16 spl_idx_current = lma_current->spl_idx_arr[level];
             if ( spl_idx_current != spl_idx_node ) {
@@ -717,14 +717,14 @@ namespace ime_pinyin {
                 ( unsigned char ) parent_son_num;
         }
         // 3. Now begin to construct the son one by one
-        size_t son_pos = 0;
+        Size_t son_pos = 0;
         lma_last_start = lemma_arr_ + item_start;
         spl_idx_node = lma_last_start->spl_idx_arr[level];
-        size_t homo_num = 0;
+        Size_t homo_num = 0;
         if ( lma_last_start->spl_idx_arr[level + 1] == 0 )
         { homo_num = 1; }
-        size_t item_start_next = item_start;
-        for ( size_t i = item_start + 1; i < item_end; i++ ) {
+        Size_t item_start_next = item_start;
+        for ( Size_t i = item_start + 1; i < item_end; i++ ) {
             LemmaEntry *lma_current = lemma_arr_ + i;
             uint16 spl_idx_current = lma_current->spl_idx_arr[level];
             if ( spl_idx_current == spl_idx_node ) {
@@ -758,7 +758,7 @@ namespace ime_pinyin {
                         assert ( homo_num <= 255 );
                         node_cur_ge1->num_of_homo = ( unsigned char ) homo_num;
                     }
-                    for ( size_t homo_pos = 0; homo_pos < homo_num; homo_pos++ ) {
+                    for ( Size_t homo_pos = 0; homo_pos < homo_num; homo_pos++ ) {
                         idx_buf[homo_pos] = lemma_arr_[item_start_next + homo_pos].idx_by_hz;
                     }
 #ifdef ___DO_STATISTICS___
@@ -817,7 +817,7 @@ namespace ime_pinyin {
                 assert ( homo_num <= 255 );
                 node_cur_ge1->num_of_homo = ( unsigned char ) homo_num;
             }
-            for ( size_t homo_pos = 0; homo_pos < homo_num; homo_pos++ ) {
+            for ( Size_t homo_pos = 0; homo_pos < homo_num; homo_pos++ ) {
                 idx_buf[homo_pos] = lemma_arr[item_start_next + homo_pos].idx_by_hz;
             }
 #ifdef ___DO_STATISTICS___
@@ -851,14 +851,14 @@ namespace ime_pinyin {
 
 #ifdef ___DO_STATISTICS___
     void DictBuilder::stat_init() {
-        memset ( max_sonbuf_len_, 0, sizeof ( size_t ) * kMaxLemmaSize );
-        memset ( max_homobuf_len_, 0, sizeof ( size_t ) * kMaxLemmaSize );
-        memset ( total_son_num_, 0, sizeof ( size_t ) * kMaxLemmaSize );
-        memset ( total_node_hasson_, 0, sizeof ( size_t ) * kMaxLemmaSize );
-        memset ( total_sonbuf_num_, 0, sizeof ( size_t ) * kMaxLemmaSize );
-        memset ( total_sonbuf_allnoson_, 0, sizeof ( size_t ) * kMaxLemmaSize );
-        memset ( total_node_in_sonbuf_allnoson_, 0, sizeof ( size_t ) * kMaxLemmaSize );
-        memset ( total_homo_num_, 0, sizeof ( size_t ) * kMaxLemmaSize );
+        memset ( max_sonbuf_len_, 0, sizeof ( Size_t ) * kMaxLemmaSize );
+        memset ( max_homobuf_len_, 0, sizeof ( Size_t ) * kMaxLemmaSize );
+        memset ( total_son_num_, 0, sizeof ( Size_t ) * kMaxLemmaSize );
+        memset ( total_node_hasson_, 0, sizeof ( Size_t ) * kMaxLemmaSize );
+        memset ( total_sonbuf_num_, 0, sizeof ( Size_t ) * kMaxLemmaSize );
+        memset ( total_sonbuf_allnoson_, 0, sizeof ( Size_t ) * kMaxLemmaSize );
+        memset ( total_node_in_sonbuf_allnoson_, 0, sizeof ( Size_t ) * kMaxLemmaSize );
+        memset ( total_homo_num_, 0, sizeof ( Size_t ) * kMaxLemmaSize );
         sonbufs_num1_ = 0;
         sonbufs_numgt1_ = 0;
         total_lma_node_num_ = 0;
@@ -868,35 +868,35 @@ namespace ime_pinyin {
         printf ( "\n------------STAT INFO-------------\n" );
         printf ( "[root is layer -1]\n" );
         printf ( ".. max_sonbuf_len per layer(from layer 0):\n   " );
-        for ( size_t i = 0; i < kMaxLemmaSize; i++ )
+        for ( Size_t i = 0; i < kMaxLemmaSize; i++ )
         { printf ( "%d, ", max_sonbuf_len_[i] ); }
         printf ( "-, \n" );
         printf ( ".. max_homobuf_len per layer:\n   -, " );
-        for ( size_t i = 0; i < kMaxLemmaSize; i++ )
+        for ( Size_t i = 0; i < kMaxLemmaSize; i++ )
         { printf ( "%d, ", max_homobuf_len_[i] ); }
         printf ( "\n" );
         printf ( ".. total_son_num per layer:\n   " );
-        for ( size_t i = 0; i < kMaxLemmaSize; i++ )
+        for ( Size_t i = 0; i < kMaxLemmaSize; i++ )
         { printf ( "%d, ", total_son_num_[i] ); }
         printf ( "-, \n" );
         printf ( ".. total_node_hasson per layer:\n   1, " );
-        for ( size_t i = 0; i < kMaxLemmaSize; i++ )
+        for ( Size_t i = 0; i < kMaxLemmaSize; i++ )
         { printf ( "%d, ", total_node_hasson_[i] ); }
         printf ( "\n" );
         printf ( ".. total_sonbuf_num per layer:\n   " );
-        for ( size_t i = 0; i < kMaxLemmaSize; i++ )
+        for ( Size_t i = 0; i < kMaxLemmaSize; i++ )
         { printf ( "%d, ", total_sonbuf_num_[i] ); }
         printf ( "-, \n" );
         printf ( ".. total_sonbuf_allnoson per layer:\n   " );
-        for ( size_t i = 0; i < kMaxLemmaSize; i++ )
+        for ( Size_t i = 0; i < kMaxLemmaSize; i++ )
         { printf ( "%d, ", total_sonbuf_allnoson_[i] ); }
         printf ( "-, \n" );
         printf ( ".. total_node_in_sonbuf_allnoson per layer:\n   " );
-        for ( size_t i = 0; i < kMaxLemmaSize; i++ )
+        for ( Size_t i = 0; i < kMaxLemmaSize; i++ )
         { printf ( "%d, ", total_node_in_sonbuf_allnoson_[i] ); }
         printf ( "-, \n" );
         printf ( ".. total_homo_num per layer:\n   0, " );
-        for ( size_t i = 0; i < kMaxLemmaSize; i++ )
+        for ( Size_t i = 0; i < kMaxLemmaSize; i++ )
         { printf ( "%d, ", total_homo_num_[i] ); }
         printf ( "\n" );
         printf ( ".. son buf allocation number with only 1 son: %d\n", sonbufs_num1_ );

@@ -35,7 +35,7 @@ extern "C" {
 
     static char16 retbuf[RET_BUF_LEN];
     static char16 ( *predict_buf ) [kMaxPredictSize + 1] = NULL;
-    static size_t predict_len;
+    static Size_t predict_len;
 
     static Sync sync_worker;
 
@@ -76,8 +76,8 @@ extern "C" {
     JNIEXPORT void JNICALL nativeImSetMaxLens ( JNIEnv *env, jclass jclazz,
                                                 jint max_sps_len,
                                                 jint max_hzs_len ) {
-        im_set_max_lens ( static_cast<size_t> ( max_sps_len ),
-                          static_cast<size_t> ( max_hzs_len ) );
+        im_set_max_lens ( static_cast<Size_t> ( max_sps_len ),
+                          static_cast<Size_t> ( max_hzs_len ) );
         return;
     }
 
@@ -114,15 +114,15 @@ extern "C" {
 
     JNIEXPORT jstring JNICALL nativeImGetPyStr ( JNIEnv *env, jclass jclazz,
                                                  jboolean decoded ) {
-        size_t py_len;
+        Size_t py_len;
         const char *py = im_get_sps_str ( &py_len ); // py_len gets decoded length
         assert ( NULL != py );
         if ( !decoded )
         { py_len = strlen ( py ); }
         const unsigned short *spl_start;
-        size_t len;
+        Size_t len;
         len = im_get_spl_start_pos ( spl_start );
-        size_t i;
+        Size_t i;
         for ( i = 0; i < py_len; i++ )
         { retbuf[i] = py[i]; }
         retbuf[i] = ( char16 ) '\0';
@@ -132,7 +132,7 @@ extern "C" {
 
     JNIEXPORT jint JNICALL nativeImGetPyStrLen ( JNIEnv *env, jclass jclazz,
                                                  jboolean decoded ) {
-        size_t py_len;
+        Size_t py_len;
         const char *py = im_get_sps_str ( &py_len ); // py_len gets decoded length
         assert ( NULL != py );
         if ( !decoded )
@@ -142,14 +142,14 @@ extern "C" {
 
     JNIEXPORT jintArray JNICALL nativeImGetSplStart ( JNIEnv *env, jclass jclazz ) {
         const unsigned short *spl_start;
-        size_t len;
+        Size_t len;
         // There will be len + 1 elements in the buffer when len > 0.
         len = im_get_spl_start_pos ( spl_start );
         jintArray arr = ( *env ).NewIntArray ( len + 2 );
         jint *arr_body = ( *env ).GetIntArrayElements ( arr, 0 );
         assert ( NULL != arr_body );
         arr_body[0] = len; // element 0 is used to store the length of buffer.
-        for ( size_t i = 0; i <= len; i++ )
+        for ( Size_t i = 0; i <= len; i++ )
         { arr_body[i + 1] = spl_start[i]; }
         ( *env ).ReleaseIntArrayElements ( arr, arr_body, 0 );
         return arr;
@@ -194,7 +194,7 @@ extern "C" {
     JNIEXPORT jint JNICALL nativeImGetPredictsNum ( JNIEnv *env, jclass clazz,
                                                     jstring fixed_str ) {
         char16 *fixed_ptr = ( char16 * ) ( *env ).GetStringChars ( fixed_str, NULL );
-        size_t fixed_len = ( size_t ) ( *env ).GetStringLength ( fixed_str );
+        Size_t fixed_len = ( Size_t ) ( *env ).GetStringLength ( fixed_str );
         char16 fixed_buf[kMaxPredictSize + 1];
         if ( fixed_len > kMaxPredictSize ) {
             fixed_ptr += fixed_len - kMaxPredictSize;
@@ -210,7 +210,7 @@ extern "C" {
     JNIEXPORT jstring JNICALL nativeImGetPredictItem ( JNIEnv *env, jclass clazz,
                                                        jint predict_no ) {
         jstring retstr;
-        if ( predict_no < 0 || ( size_t ) predict_no >= predict_len ) {
+        if ( predict_no < 0 || ( Size_t ) predict_no >= predict_len ) {
             retstr = ( *env ).NewString ( ( unsigned short * ) predict_buf[0], 0 );
         } else {
             retstr = ( *env ).NewString ( ( unsigned short * ) predict_buf[predict_no],
@@ -241,7 +241,7 @@ extern "C" {
     JNIEXPORT jint JNICALL nativeSyncPutLemmas ( JNIEnv *env, jclass clazz,
                                                  jstring tomerge ) {
         char16 *ptr = ( char16 * ) ( *env ).GetStringChars ( tomerge, NULL );
-        int len = ( size_t ) ( *env ).GetStringLength ( tomerge );
+        int len = ( Size_t ) ( *env ).GetStringLength ( tomerge );
         int added = sync_worker.put_lemmas ( ptr, len );
         ( *env ).ReleaseStringChars ( tomerge, ptr );
         return added;

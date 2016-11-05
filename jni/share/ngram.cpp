@@ -55,10 +55,10 @@ namespace ime_pinyin {
         { return qsearch_nearest ( code_book, freq, mid, end ); }
     }
 
-    size_t update_code_idx ( double freqs[], size_t num, double code_book[],
+    Size_t update_code_idx ( double freqs[], Size_t num, double code_book[],
                              CODEBOOK_TYPE *code_idx ) {
-        size_t changed = 0;
-        for ( size_t pos = 0; pos < num; pos++ ) {
+        Size_t changed = 0;
+        for ( Size_t pos = 0; pos < num; pos++ ) {
             CODEBOOK_TYPE idx;
             idx = qsearch_nearest ( code_book, freqs[pos], 0, kCodeBookSize - 1 );
             if ( idx != code_idx[pos] )
@@ -68,21 +68,21 @@ namespace ime_pinyin {
         return changed;
     }
 
-    double recalculate_kernel ( double freqs[], size_t num, double code_book[],
+    double recalculate_kernel ( double freqs[], Size_t num, double code_book[],
                                 CODEBOOK_TYPE *code_idx ) {
         double ret = 0;
-        size_t *item_num =  new size_t[kCodeBookSize];
+        Size_t *item_num =  new Size_t[kCodeBookSize];
         assert ( item_num );
-        memset ( item_num, 0, sizeof ( size_t ) * kCodeBookSize );
+        memset ( item_num, 0, sizeof ( Size_t ) * kCodeBookSize );
         double *cb_new = new double[kCodeBookSize];
         assert ( cb_new );
         memset ( cb_new, 0, sizeof ( double ) * kCodeBookSize );
-        for ( size_t pos = 0; pos < num; pos++ ) {
+        for ( Size_t pos = 0; pos < num; pos++ ) {
             ret += distance ( freqs[pos], code_book[code_idx[pos]] );
             cb_new[code_idx[pos]] += freqs[pos];
             item_num[code_idx[pos]] += 1;
         }
-        for ( size_t code = 0; code < kCodeBookSize; code++ ) {
+        for ( Size_t code = 0; code < kCodeBookSize; code++ ) {
             assert ( item_num[code] > 0 );
             code_book[code] = cb_new[code] / item_num[code];
         }
@@ -91,12 +91,12 @@ namespace ime_pinyin {
         return ret;
     }
 
-    void iterate_codes ( double freqs[], size_t num, double code_book[],
+    void iterate_codes ( double freqs[], Size_t num, double code_book[],
                          CODEBOOK_TYPE *code_idx ) {
-        size_t iter_num = 0;
+        Size_t iter_num = 0;
         double delta_last = 0;
         do {
-            size_t changed = update_code_idx ( freqs, num, code_book, code_idx );
+            Size_t changed = update_code_idx ( freqs, num, code_book, code_idx );
             double delta = recalculate_kernel ( freqs, num, code_book, code_idx );
             if ( kPrintDebug0 ) {
                 printf ( "---Unigram codebook iteration: %d : %d, %.9f\n",
@@ -146,7 +146,7 @@ namespace ime_pinyin {
         { return false; }
         if ( 0 == idx_num_ || NULL == freq_codes_ ||  NULL == lma_freq_idx_ )
         { return false; }
-        if ( fwrite ( &idx_num_, sizeof ( size_t ), 1, fp ) != 1 )
+        if ( fwrite ( &idx_num_, sizeof ( Size_t ), 1, fp ) != 1 )
         { return false; }
         if ( fwrite ( freq_codes_, sizeof ( LmaScoreType ), kCodeBookSize, fp ) !=
              kCodeBookSize )
@@ -160,7 +160,7 @@ namespace ime_pinyin {
         if ( NULL == fp )
         { return false; }
         initialized_ = false;
-        if ( fread ( &idx_num_, sizeof ( size_t ), 1, fp ) != 1 )
+        if ( fread ( &idx_num_, sizeof ( Size_t ), 1, fp ) != 1 )
         { return false; }
         if ( NULL != lma_freq_idx_ )
         { free ( lma_freq_idx_ ); }
@@ -182,7 +182,7 @@ namespace ime_pinyin {
         return true;
     }
 
-    void NGram::set_total_freq_none_sys ( size_t freq_none_sys ) {
+    void NGram::set_total_freq_none_sys ( Size_t freq_none_sys ) {
         total_freq_none_sys_ = freq_none_sys;
         if ( 0 == total_freq_none_sys_ ) {
             sys_score_compensation_ = 0;
@@ -210,7 +210,7 @@ namespace ime_pinyin {
     }
 
 #ifdef ___BUILD_MODEL___
-    bool NGram::build_unigram ( LemmaEntry *lemma_arr, size_t lemma_num,
+    bool NGram::build_unigram ( LemmaEntry *lemma_arr, Size_t lemma_num,
                                 LemmaIdType next_idx_unused ) {
         if ( NULL == lemma_arr || 0 == lemma_num || next_idx_unused <= 1 )
         { return false; }
@@ -221,7 +221,7 @@ namespace ime_pinyin {
         freqs[0] = ADD_COUNT;
         total_freq += freqs[0];
         LemmaIdType idx_now = 0;
-        for ( size_t pos = 0; pos < lemma_num; pos++ ) {
+        for ( Size_t pos = 0; pos < lemma_num; pos++ ) {
             if ( lemma_arr[pos].idx_by_hz == idx_now )
             { continue; }
             idx_now++;
@@ -234,7 +234,7 @@ namespace ime_pinyin {
         double max_freq = 0;
         idx_num_ = idx_now + 1;
         assert ( idx_now + 1 == next_idx_unused );
-        for ( size_t pos = 0; pos < idx_num_; pos++ ) {
+        for ( Size_t pos = 0; pos < idx_num_; pos++ ) {
             freqs[pos] = freqs[pos] / total_freq;
             assert ( freqs[pos] > 0 );
             if ( freqs[pos] > max_freq )
@@ -249,13 +249,13 @@ namespace ime_pinyin {
         { freq_codes_ = new LmaScoreType[kCodeBookSize]; }
         assert ( freq_codes_ );
         memset ( freq_codes_, 0, sizeof ( LmaScoreType ) * kCodeBookSize );
-        size_t freq_pos = 0;
-        for ( size_t code_pos = 0; code_pos < kCodeBookSize; code_pos++ ) {
+        Size_t freq_pos = 0;
+        for ( Size_t code_pos = 0; code_pos < kCodeBookSize; code_pos++ ) {
             bool found = true;
             while ( found ) {
                 found = false;
                 double cand = freqs[freq_pos];
-                for ( size_t i = 0; i < code_pos; i++ )
+                for ( Size_t i = 0; i < code_pos; i++ )
                     if ( freq_codes_df_[i] == cand ) {
                         found = true;
                         break;
@@ -275,7 +275,7 @@ namespace ime_pinyin {
         if ( kPrintDebug0 ) {
             printf ( "\n------Language Model Unigram Codebook------\n" );
         }
-        for ( size_t code_pos = 0; code_pos < kCodeBookSize; code_pos++ ) {
+        for ( Size_t code_pos = 0; code_pos < kCodeBookSize; code_pos++ ) {
             double log_score = log ( freq_codes_df_[code_pos] );
             float final_score = convert_psb_to_score ( freq_codes_df_[code_pos] );
             if ( kPrintDebug0 ) {

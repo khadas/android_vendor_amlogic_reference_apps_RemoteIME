@@ -48,13 +48,13 @@ namespace ime_pinyin {
             // maximum length of the cache buffer.
             // Note: splid must be a half id, and lpi_items must be not NULL. The
             // caller of this function should guarantee this.
-            size_t put_cache ( uint16 splid, LmaPsbItem lpi_items[], size_t lpi_num );
+            Size_t put_cache ( uint16 splid, LmaPsbItem lpi_items[], Size_t lpi_num );
 
             // Get the cached list for the given half id.
             // Return the length of the cached buffer.
             // Note: splid must be a half id, and lpi_items must be not NULL. The
             // caller of this function should guarantee this.
-            size_t get_cache ( uint16 splid, LmaPsbItem lpi_items[], size_t lpi_max );
+            Size_t get_cache ( uint16 splid, LmaPsbItem lpi_items[], Size_t lpi_max );
     };
 
 }  // namespace

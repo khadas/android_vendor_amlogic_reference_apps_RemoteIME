@@ -39,16 +39,16 @@ namespace ime_pinyin {
 
             bool close_dict();
 
-            size_t number_of_lemmas();
+            Size_t number_of_lemmas();
 
             void reset_milestones ( uint16 from_step, MileStoneHandle from_handle );
 
             MileStoneHandle extend_dict ( MileStoneHandle from_handle,
                                           const DictExtPara *dep, LmaPsbItem *lpi_items,
-                                          size_t lpi_max, size_t *lpi_num );
+                                          Size_t lpi_max, Size_t *lpi_num );
 
-            size_t get_lpis ( const uint16 *splid_str, uint16 splid_str_len,
-                              LmaPsbItem *lpi_items, size_t lpi_max );
+            Size_t get_lpis ( const uint16 *splid_str, uint16 splid_str_len,
+                              LmaPsbItem *lpi_items, Size_t lpi_max );
 
             uint16 get_lemma_str ( LemmaIdType id_lemma, char16 *str_buf,
                                    uint16 str_max );
@@ -56,9 +56,9 @@ namespace ime_pinyin {
             uint16 get_lemma_splids ( LemmaIdType id_lemma, uint16 *splids,
                                       uint16 splids_max, bool arg_valid );
 
-            size_t predict ( const char16 last_hzs[], uint16 hzs_len,
-                             NPredictItem *npre_items, size_t npre_max,
-                             size_t b4_used );
+            Size_t predict ( const char16 last_hzs[], uint16 hzs_len,
+                             NPredictItem *npre_items, Size_t npre_max,
+                             Size_t b4_used );
 
             // Full spelling ids are required
             LemmaIdType put_lemma ( char16 lemma_str[], uint16 splids[],
@@ -77,8 +77,8 @@ namespace ime_pinyin {
 
             bool remove_lemma ( LemmaIdType lemma_id );
 
-            size_t get_total_lemma_count();
-            void set_total_lemma_count_of_others ( size_t count );
+            Size_t get_total_lemma_count();
+            void set_total_lemma_count_of_others ( Size_t count );
 
             void flush_cache();
 
@@ -182,12 +182,12 @@ namespace ime_pinyin {
 #endif
 #ifdef ___SYNC_ENABLED___
             uint32 *syncs_;
-            size_t sync_count_size_;
+            Size_t sync_count_size_;
 #endif
             uint32 *offsets_by_id_;
 
-            size_t lemma_count_left_;
-            size_t lemma_size_left_;
+            Size_t lemma_count_left_;
+            Size_t lemma_size_left_;
 
             const char *dict_file_;
 
@@ -304,8 +304,8 @@ namespace ime_pinyin {
             LemmaIdType _put_lemma ( char16 lemma_str[], uint16 splids[],
                                      uint16 lemma_len, uint16 count, uint64 lmt );
 
-            size_t _get_lpis ( const uint16 *splid_str, uint16 splid_str_len,
-                               LmaPsbItem *lpi_items, size_t lpi_max, bool *need_extend );
+            Size_t _get_lpis ( const uint16 *splid_str, uint16 splid_str_len,
+                               LmaPsbItem *lpi_items, Size_t lpi_max, bool *need_extend );
 
             int _get_lemma_score ( char16 lemma_str[], uint16 splids[], uint16 lemma_len );
 

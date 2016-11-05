@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 #include <assert.h>
 #include <math.h>
 #include <stdio.h>
@@ -66,16 +65,16 @@ namespace ime_pinyin {
         dict_trie_ = new DictTrie();
         user_dict_ = static_cast<AtomDictBase *> ( new UserDict() );
         spl_parser_ = new SpellingParser();
-        size_t mtrx_nd_size = sizeof ( MatrixNode ) * kMtrxNdPoolSize;
-        mtrx_nd_size = align_to_size_t ( mtrx_nd_size ) / sizeof ( size_t );
-        size_t dmi_size = sizeof ( DictMatchInfo ) * kDmiPoolSize;
-        dmi_size = align_to_size_t ( dmi_size ) / sizeof ( size_t );
-        size_t matrix_size = sizeof ( MatrixRow ) * kMaxRowNum;
-        matrix_size = align_to_size_t ( matrix_size ) / sizeof ( size_t );
-        size_t dep_size = sizeof ( DictExtPara );
-        dep_size = align_to_size_t ( dep_size ) / sizeof ( size_t );
+        Size_t mtrx_nd_size = sizeof ( MatrixNode ) * kMtrxNdPoolSize;
+        mtrx_nd_size = align_to_Size_t ( mtrx_nd_size ) / sizeof ( Size_t );
+        Size_t dmi_size = sizeof ( DictMatchInfo ) * kDmiPoolSize;
+        dmi_size = align_to_Size_t ( dmi_size ) / sizeof ( Size_t );
+        Size_t matrix_size = sizeof ( MatrixRow ) * kMaxRowNum;
+        matrix_size = align_to_Size_t ( matrix_size ) / sizeof ( Size_t );
+        Size_t dep_size = sizeof ( DictExtPara );
+        dep_size = align_to_Size_t ( dep_size ) / sizeof ( Size_t );
         // share_buf's size is determined by the buffers for search.
-        share_buf_ = new size_t[mtrx_nd_size + dmi_size + matrix_size + dep_size];
+        share_buf_ = new Size_t[mtrx_nd_size + dmi_size + matrix_size + dep_size];
         if ( NULL == dict_trie_ || NULL == user_dict_ || NULL == spl_parser_ ||
              NULL == share_buf_ )
         { return false; }
@@ -88,7 +87,7 @@ namespace ime_pinyin {
         // The prediction buffer is also based on the share buffer.
         npre_items_ = reinterpret_cast<NPredictItem *> ( share_buf_ );
         npre_items_len_ = ( mtrx_nd_size + dmi_size + matrix_size + dep_size ) *
-                          sizeof ( size_t ) / sizeof ( NPredictItem );
+                          sizeof ( Size_t ) / sizeof ( NPredictItem );
         return true;
     }
 
@@ -106,11 +105,11 @@ namespace ime_pinyin {
 
     bool MatrixSearch::init ( const char *fn_sys_dict, const char *fn_usr_dict ) {
         if ( NULL == fn_sys_dict || NULL == fn_usr_dict )
-        { return false; }
+        {  return false; }
         if ( !alloc_resource() )
-        { return false; }
+        {  return false; }
         if ( !dict_trie_->load_dict ( fn_sys_dict, 1, kSysDictIdEnd ) )
-        { return false; }
+        {  return false; }
         // If engine fails to load the user dictionary, reset the user dictionary
         // to NULL.
         if ( !user_dict_->load_dict ( fn_usr_dict, kUserDictIdStart, kUserDictIdEnd ) ) {
@@ -143,7 +142,7 @@ namespace ime_pinyin {
         return true;
     }
 
-    void MatrixSearch::set_max_lens ( size_t max_sps_len, size_t max_hzs_len ) {
+    void MatrixSearch::set_max_lens ( Size_t max_sps_len, Size_t max_hzs_len ) {
         if ( 0 != max_sps_len )
         { max_sps_len_ = max_sps_len; }
         if ( 0 != max_hzs_len )
@@ -206,7 +205,7 @@ namespace ime_pinyin {
         return true;
     }
 
-    bool MatrixSearch::reset_search ( size_t ch_pos, bool clear_fixed_this_step,
+    bool MatrixSearch::reset_search ( Size_t ch_pos, bool clear_fixed_this_step,
                                       bool clear_dmi_this_step,
                                       bool clear_mtrx_this_step ) {
         if ( !inited_ || ch_pos > pys_decoded_len_ || ch_pos >= kMaxRowNum )
@@ -254,7 +253,7 @@ namespace ime_pinyin {
                  ( ( kLemmaIdComposing != lma_id_[0] ) ||
                    ( kLemmaIdComposing == lma_id_[0] &&
                      spl_start_[c_phrase_.length] <= ch_pos ) ) ) {
-                size_t fixed_ch_pos = ch_pos;
+                Size_t fixed_ch_pos = ch_pos;
                 if ( clear_fixed_this_step )
                 { fixed_ch_pos = fixed_ch_pos > 0 ? fixed_ch_pos - 1 : 0; }
                 while ( NULL == matrix_[fixed_ch_pos].mtrx_nd_fixed && fixed_ch_pos > 0 )
@@ -355,14 +354,14 @@ namespace ime_pinyin {
         return true;
     }
 
-    void MatrixSearch::del_in_pys ( size_t start, size_t len ) {
+    void MatrixSearch::del_in_pys ( Size_t start, Size_t len ) {
         while ( start < kMaxRowNum - len && '\0' != pys_[start] ) {
             pys_[start] = pys_[start + len];
             start++;
         }
     }
 
-    size_t MatrixSearch::search ( const char *py, size_t py_len ) {
+    Size_t MatrixSearch::search ( const char *py, Size_t py_len ) {
         if ( !inited_ || NULL == py )
         { return 0; }
         // If the search Pinyin string is too long, it will be truncated.
@@ -370,7 +369,7 @@ namespace ime_pinyin {
         { py_len = kMaxRowNum - 1; }
         // Compare the new string with the previous one. Find their prefix to
         // increase search efficiency.
-        size_t ch_pos = 0;
+        Size_t ch_pos = 0;
         for ( ch_pos = 0; ch_pos < pys_decoded_len_; ch_pos++ ) {
             if ( '\0' == py[ch_pos] || py[ch_pos] != pys_[ch_pos] )
             { break; }
@@ -411,11 +410,11 @@ namespace ime_pinyin {
         return ch_pos;
     }
 
-    size_t MatrixSearch::delsearch ( size_t pos, bool is_pos_in_splid,
+    Size_t MatrixSearch::delsearch ( Size_t pos, bool is_pos_in_splid,
                                      bool clear_fixed_this_step ) {
         if ( !inited_ )
         { return 0; }
-        size_t reset_pos = pos;
+        Size_t reset_pos = pos;
         // Out of range for both Pinyin mode and Spelling id mode.
         if ( pys_decoded_len_ <= pos ) {
             del_in_pys ( pos, 1 );
@@ -437,8 +436,8 @@ namespace ime_pinyin {
         { return pys_decoded_len_; }
         // Begin to handle two modes respectively.
         // Pinyin mode by default
-        size_t c_py_len = 0;  // The length of composing phrase's Pinyin
-        size_t del_py_len = 1;
+        Size_t c_py_len = 0;  // The length of composing phrase's Pinyin
+        Size_t del_py_len = 1;
         if ( !is_pos_in_splid ) {
             // Pinyin mode is only allowed to delete beyond the fixed lemmas.
             if ( fixed_lmas_ > 0 && pos < spl_start_[lma_start_[fixed_lmas_]] )
@@ -513,15 +512,15 @@ namespace ime_pinyin {
         return pys_decoded_len_;
     }
 
-    size_t MatrixSearch::get_candidate_num() {
+    Size_t MatrixSearch::get_candidate_num() {
         if ( !inited_ || 0 == pys_decoded_len_ ||
              0 == matrix_[pys_decoded_len_].mtrx_nd_num )
         { return 0; }
         return 1 + lpi_total_;
     }
 
-    char16 *MatrixSearch::get_candidate ( size_t cand_id, char16 *cand_str,
-                                          size_t max_len ) {
+    char16 *MatrixSearch::get_candidate ( Size_t cand_id, char16 *cand_str,
+                                          Size_t max_len ) {
         if ( !inited_ || 0 == pys_decoded_len_ || NULL == cand_str )
         { return NULL; }
         if ( 0 == cand_id ) {
@@ -557,7 +556,7 @@ namespace ime_pinyin {
         if ( NULL != user_dict_ ) {
             // Update the total frequency of all lemmas, including system lemmas and
             // user dictionary lemmas.
-            size_t total_freq = user_dict_->get_total_lemma_count();
+            Size_t total_freq = user_dict_->get_total_lemma_count();
             dict_trie_->set_total_lemma_count_of_others ( total_freq );
         }
     }
@@ -610,7 +609,7 @@ namespace ime_pinyin {
     }
 
     bool MatrixSearch::try_add_cand0_to_userdict() {
-        size_t new_cand_num = get_candidate_num();
+        Size_t new_cand_num = get_candidate_num();
         if ( fixed_hzs_ > 0 && 1 == new_cand_num ) {
             float score_from = 0;
             uint16 lma_id_from = 0;
@@ -671,14 +670,14 @@ namespace ime_pinyin {
     //         1.2.1. The whole sentence will be added as a user lemma. If the
     //                sentence contains user lemmas, -> hit, and add occuring count
     //                by 1.
-    size_t MatrixSearch::choose ( size_t cand_id ) {
+    Size_t MatrixSearch::choose ( Size_t cand_id ) {
         if ( !inited_ || 0 == pys_decoded_len_ )
         { return 0; }
         if ( 0 == cand_id ) {
             fixed_hzs_ = spl_id_num_;
             matrix_[spl_start_[fixed_hzs_]].mtrx_nd_fixed = mtrx_nd_pool_ +
                                                             matrix_[spl_start_[fixed_hzs_]].mtrx_nd_pos;
-            for ( size_t pos = fixed_lmas_; pos < lma_id_num_; pos++ ) {
+            for ( Size_t pos = fixed_lmas_; pos < lma_id_num_; pos++ ) {
                 fixed_lmas_no1_[pos] = 1;
             }
             fixed_lmas_ = lma_id_num_;
@@ -711,7 +710,7 @@ namespace ime_pinyin {
         // Find the length of the candidate.
         LemmaIdType id_chosen = lpi_items_[cand_id].id;
         LmaScoreType score_chosen = lpi_items_[cand_id].psb;
-        size_t cand_len = lpi_items_[cand_id].lma_len;
+        Size_t cand_len = lpi_items_[cand_id].lma_len;
         assert ( cand_len > 0 );
         // Notify the atom dictionary that this item is hit.
         if ( is_user_lemma ( id_chosen ) ) {
@@ -722,10 +721,10 @@ namespace ime_pinyin {
         }
         // 3. Fixed the chosen item.
         // 3.1 Get the steps number.
-        size_t step_fr = spl_start_[fixed_hzs_];
-        size_t step_to = spl_start_[fixed_hzs_ + cand_len];
+        Size_t step_fr = spl_start_[fixed_hzs_];
+        Size_t step_to = spl_start_[fixed_hzs_ + cand_len];
         // 3.2 Save the length of the original string.
-        size_t pys_decoded_len = pys_decoded_len_;
+        Size_t pys_decoded_len = pys_decoded_len_;
         // 3.2 Reset the space of the fixed part.
         reset_search ( step_to, false, false, true );
         // 3.3 For the last character of the fixed part, the previous DMI
@@ -767,12 +766,12 @@ namespace ime_pinyin {
         return get_candidate_num();
     }
 
-    size_t MatrixSearch::cancel_last_choice() {
+    Size_t MatrixSearch::cancel_last_choice() {
         if ( !inited_ || 0 == pys_decoded_len_ )
         { return 0; }
-        size_t step_start = 0;
+        Size_t step_start = 0;
         if ( fixed_hzs_ > 0 ) {
-            size_t step_end = spl_start_[fixed_hzs_];
+            Size_t step_end = spl_start_[fixed_hzs_];
             MatrixNode *end_node = matrix_[step_end].mtrx_nd_fixed;
             assert ( NULL != end_node );
             step_start = end_node->from->step;
@@ -793,7 +792,7 @@ namespace ime_pinyin {
         return get_candidate_num();
     }
 
-    size_t MatrixSearch::get_fixedlen() {
+    Size_t MatrixSearch::get_fixedlen() {
         if ( !inited_ || 0 == pys_decoded_len_ )
         { return 0; }
         return fixed_hzs_;
@@ -997,12 +996,12 @@ namespace ime_pinyin {
         if ( sent_len > kMaxLemmaSize )
         { pfullsent = NULL; }
         lpi_total_ = 0;
-        size_t lpi_num_full_match = 0;  // Number of items which are fully-matched.
+        Size_t lpi_num_full_match = 0;  // Number of items which are fully-matched.
         while ( lma_size > 0 ) {
-            size_t lma_num;
+            Size_t lma_num;
             lma_num = get_lpis ( spl_id_ + fixed_hzs_, lma_size,
                                  lpi_items_ + lpi_total_,
-                                 size_t ( kMaxLmaPsbItems - lpi_total_ ),
+                                 Size_t ( kMaxLmaPsbItems - lpi_total_ ),
                                  pfullsent, lma_size == lma_size_max );
             if ( lma_num > 0 ) {
                 lpi_total_ += lma_num;
@@ -1020,7 +1019,7 @@ namespace ime_pinyin {
                   sizeof ( LmaPsbItem ), cmp_lpi_with_unified_psb );
         if ( kPrintDebug0 ) {
             printf ( "-----Prepare candidates, score:\n" );
-            for ( size_t a = 0; a < lpi_total_; a++ ) {
+            for ( Size_t a = 0; a < lpi_total_; a++ ) {
                 printf ( "[%03d]%d    ", a, lpi_items_[a].psb );
                 if ( ( a + 1 ) % 6 == 0 ) { printf ( "\n" ); }
             }
@@ -1031,20 +1030,20 @@ namespace ime_pinyin {
         }
     }
 
-    const char *MatrixSearch::get_pystr ( size_t *decoded_len ) {
+    const char *MatrixSearch::get_pystr ( Size_t *decoded_len ) {
         if ( !inited_ || NULL == decoded_len )
-        { return NULL; }
+        {  return NULL; }
         *decoded_len = pys_decoded_len_;
         return pys_;
     }
 
-    void MatrixSearch::merge_fixed_lmas ( size_t del_spl_pos ) {
+    void MatrixSearch::merge_fixed_lmas ( Size_t del_spl_pos ) {
         if ( fixed_lmas_ == 0 )
         { return; }
         // Update spelling segmentation information first.
         spl_id_num_ -= 1;
         uint16 del_py_len = spl_start_[del_spl_pos + 1] - spl_start_[del_spl_pos];
-        for ( size_t pos = del_spl_pos; pos <= spl_id_num_; pos++ ) {
+        for ( Size_t pos = del_spl_pos; pos <= spl_id_num_; pos++ ) {
             spl_start_[pos] = spl_start_[pos + 1] - del_py_len;
             if ( pos == spl_id_num_ )
             { break; }
@@ -1164,7 +1163,7 @@ namespace ime_pinyin {
             mtrx_nd = mtrx_nd->from;
         }
         // Reverse the result of spelling info
-        for ( size_t pos = fixed_hzs_;
+        for ( Size_t pos = fixed_hzs_;
               pos < fixed_hzs_ + ( spl_id_num_ - fixed_hzs_ + 1 ) / 2; pos++ ) {
             if ( spl_id_num_ + fixed_hzs_ - pos != pos + 1 ) {
                 spl_start_[pos + 1] ^= spl_start_[spl_id_num_ - pos + fixed_hzs_];
@@ -1176,7 +1175,7 @@ namespace ime_pinyin {
             }
         }
         // Reverse the result of lemma info
-        for ( size_t pos = fixed_lmas_;
+        for ( Size_t pos = fixed_lmas_;
               pos < fixed_lmas_ + ( lma_id_num_ - fixed_lmas_ + 1 ) / 2; pos++ ) {
             assert ( lma_id_num_ + fixed_lmas_ - pos - 1 >= pos );
             if ( lma_id_num_ + fixed_lmas_ - pos > pos + 1 ) {
@@ -1188,7 +1187,7 @@ namespace ime_pinyin {
                 lma_id_[pos] ^= lma_id_[lma_id_num_ - 1 - pos + fixed_lmas_];
             }
         }
-        for ( size_t pos = fixed_lmas_ + 1; pos <= lma_id_num_; pos++ ) {
+        for ( Size_t pos = fixed_lmas_ + 1; pos <= lma_id_num_; pos++ ) {
             if ( pos < lma_id_num_ )
                 lma_start_[pos] = lma_start_[pos - 1] +
                                   ( lma_start_[pos] - lma_start_[pos + 1] );
@@ -1198,7 +1197,7 @@ namespace ime_pinyin {
         }
         // Find the last fixed position
         fixed_hzs_ = 0;
-        for ( size_t pos = spl_id_num_; pos > 0; pos-- ) {
+        for ( Size_t pos = spl_id_num_; pos > 0; pos-- ) {
             if ( NULL != matrix_[spl_start_[pos]].mtrx_nd_fixed ) {
                 fixed_hzs_ = pos;
                 break;
@@ -1207,13 +1206,13 @@ namespace ime_pinyin {
         return;
     }
 
-    size_t MatrixSearch::get_spl_start ( const uint16 *&spl_start ) {
+    Size_t MatrixSearch::get_spl_start ( const uint16 *&spl_start ) {
         get_spl_start_id();
         spl_start = spl_start_;
         return spl_id_num_;
     }
 
-    size_t MatrixSearch::extend_dmi ( DictExtPara *dep, DictMatchInfo *dmi_s ) {
+    Size_t MatrixSearch::extend_dmi ( DictExtPara *dep, DictMatchInfo *dmi_s ) {
         if ( dmi_pool_used_ >= kDmiPoolSize ) { return 0; }
         if ( dmi_c_phrase_ )
         { return extend_dmi_c ( dep, dmi_s ); }
@@ -1224,7 +1223,7 @@ namespace ime_pinyin {
         { cached = lpi_cache.is_cached ( splid ); }
         // 1. If this is a half Id, get its corresponding full starting Id and
         // number of full Id.
-        size_t ret_val = 0;
+        Size_t ret_val = 0;
         PoolPosType mtrx_dmi_fr = ( PoolPosType ) - 1; // From which dmi node
         lpi_total_ = 0;
         MileStoneHandle from_h[3];
@@ -1235,7 +1234,7 @@ namespace ime_pinyin {
             from_h[1] = dmi_s->dict_handles[1];
         }
         // 2. Begin exgtending in the system dictionary
-        size_t lpi_num = 0;
+        Size_t lpi_num = 0;
         MileStoneHandle handles[2];
         handles[0] = handles[1] = 0;
         if ( from_h[0] > 0 || NULL == dmi_s ) {
@@ -1256,7 +1255,7 @@ namespace ime_pinyin {
                                                    &lpi_num );
             if ( handles[1] > 0 ) {
                 if ( kPrintDebug0 ) {
-                    for ( size_t t = 0; t < lpi_num; t++ ) {
+                    for ( Size_t t = 0; t < lpi_num; t++ ) {
                         printf ( "--Extend in user dict: uid:%d uscore:%d\n", lpi_items_[lpi_total_ + t].id,
                                  lpi_items_[lpi_total_ + t].psb );
                     }
@@ -1297,7 +1296,7 @@ namespace ime_pinyin {
         return ret_val;
     }
 
-    size_t MatrixSearch::extend_dmi_c ( DictExtPara *dep, DictMatchInfo *dmi_s ) {
+    Size_t MatrixSearch::extend_dmi_c ( DictExtPara *dep, DictMatchInfo *dmi_s ) {
         lpi_total_ = 0;
         uint16 pos = dep->splids_extended;
         assert ( dmi_c_phrase_ );
@@ -1328,9 +1327,9 @@ namespace ime_pinyin {
         return 0;
     }
 
-    size_t MatrixSearch::extend_mtrx_nd ( MatrixNode *mtrx_nd, LmaPsbItem lpi_items[],
-                                          size_t lpi_num, PoolPosType dmi_fr,
-                                          size_t res_row ) {
+    Size_t MatrixSearch::extend_mtrx_nd ( MatrixNode *mtrx_nd, LmaPsbItem lpi_items[],
+                                          Size_t lpi_num, PoolPosType dmi_fr,
+                                          Size_t res_row ) {
         assert ( NULL != mtrx_nd );
         matrix_[res_row].mtrx_nd_fixed = NULL;
         if ( mtrx_nd_pool_used_ >= kMtrxNdPoolSize - kMaxNodeARow )
@@ -1342,17 +1341,17 @@ namespace ime_pinyin {
             { lpi_num = kMaxNodeARow; }
         }
         MatrixNode *mtrx_nd_res_min = mtrx_nd_pool_ + matrix_[res_row].mtrx_nd_pos;
-        for ( size_t pos = 0; pos < lpi_num; pos++ ) {
+        for ( Size_t pos = 0; pos < lpi_num; pos++ ) {
             float score = mtrx_nd->score + lpi_items[pos].psb;
             if ( pos > 0 && score - PRUMING_SCORE > mtrx_nd_res_min->score )
             { break; }
             // Try to add a new node
-            size_t mtrx_nd_num = matrix_[res_row].mtrx_nd_num;
+            Size_t mtrx_nd_num = matrix_[res_row].mtrx_nd_num;
             MatrixNode *mtrx_nd_res = mtrx_nd_res_min + mtrx_nd_num;
             bool replace = false;
             // Find its position
             while ( mtrx_nd_res > mtrx_nd_res_min && score < ( mtrx_nd_res - 1 )->score ) {
-                if ( static_cast<size_t> ( mtrx_nd_res - mtrx_nd_res_min ) < kMaxNodeARow )
+                if ( static_cast<Size_t> ( mtrx_nd_res - mtrx_nd_res_min ) < kMaxNodeARow )
                 { *mtrx_nd_res = * ( mtrx_nd_res - 1 ); }
                 mtrx_nd_res--;
                 replace = true;
@@ -1371,7 +1370,7 @@ namespace ime_pinyin {
         return matrix_[res_row].mtrx_nd_num;
     }
 
-    PoolPosType MatrixSearch::match_dmi ( size_t step_to, uint16 spl_ids[],
+    PoolPosType MatrixSearch::match_dmi ( Size_t step_to, uint16 spl_ids[],
                                           uint16 spl_id_num ) {
         if ( pys_decoded_len_ < step_to || 0 == matrix_[step_to].dmi_num ) {
             return static_cast<PoolPosType> ( -1 );
@@ -1395,14 +1394,14 @@ namespace ime_pinyin {
         return static_cast<PoolPosType> ( -1 );
     }
 
-    char16 *MatrixSearch::get_candidate0 ( char16 *cand_str, size_t max_len,
+    char16 *MatrixSearch::get_candidate0 ( char16 *cand_str, Size_t max_len,
                                            uint16 *retstr_len,
                                            bool only_unfixed ) {
         if ( pys_decoded_len_ == 0 ||
              matrix_[pys_decoded_len_].mtrx_nd_num == 0 )
         { return NULL; }
         LemmaIdType idxs[kMaxRowNum];
-        size_t id_num = 0;
+        Size_t id_num = 0;
         MatrixNode *mtrx_nd = mtrx_nd_pool_ + matrix_[pys_decoded_len_].mtrx_nd_pos;
         if ( kPrintDebug0 ) {
             printf ( "--- sentence score: %f\n", mtrx_nd->score );
@@ -1423,7 +1422,7 @@ namespace ime_pinyin {
         if ( kPrintDebug1 ) {
             printf ( "<<==============Sentence DMI (reverse order) end=============\n" );
         }
-        size_t ret_pos = 0;
+        Size_t ret_pos = 0;
         do {
             id_num--;
             if ( 0 == idxs[id_num] )
@@ -1453,36 +1452,36 @@ namespace ime_pinyin {
         return cand_str;
     }
 
-    size_t MatrixSearch::get_lpis ( const uint16 *splid_str, size_t splid_str_len,
-                                    LmaPsbItem *lma_buf, size_t max_lma_buf,
+    Size_t MatrixSearch::get_lpis ( const uint16 *splid_str, Size_t splid_str_len,
+                                    LmaPsbItem *lma_buf, Size_t max_lma_buf,
                                     const char16 *pfullsent, bool sort_by_psb ) {
         if ( splid_str_len > kMaxLemmaSize )
         { return 0; }
-        size_t num1 = dict_trie_->get_lpis ( splid_str, splid_str_len,
+        Size_t num1 = dict_trie_->get_lpis ( splid_str, splid_str_len,
                                              lma_buf, max_lma_buf );
-        size_t num2 = 0;
+        Size_t num2 = 0;
         if ( NULL != user_dict_ ) {
             num2 = user_dict_->get_lpis ( splid_str, splid_str_len,
                                           lma_buf + num1, max_lma_buf - num1 );
         }
-        size_t num = num1 + num2;
+        Size_t num = num1 + num2;
         if ( 0 == num )
         { return 0; }
         // Remove repeated items.
         if ( splid_str_len > 1 ) {
             LmaPsbStrItem *lpsis = reinterpret_cast<LmaPsbStrItem *> ( lma_buf + num );
-            size_t lpsi_num = ( max_lma_buf - num ) * sizeof ( LmaPsbItem ) /
+            Size_t lpsi_num = ( max_lma_buf - num ) * sizeof ( LmaPsbItem ) /
                               sizeof ( LmaPsbStrItem );
             assert ( lpsi_num > num );
             if ( num > lpsi_num ) { num = lpsi_num; }
             lpsi_num = num;
-            for ( size_t pos = 0; pos < lpsi_num; pos++ ) {
+            for ( Size_t pos = 0; pos < lpsi_num; pos++ ) {
                 lpsis[pos].lpi = lma_buf[pos];
                 get_lemma_str ( lma_buf[pos].id, lpsis[pos].str, kMaxLemmaSize + 1 );
             }
             myqsort ( lpsis, lpsi_num, sizeof ( LmaPsbStrItem ), cmp_lpsi_with_str );
-            size_t remain_num = 0;
-            for ( size_t pos = 0; pos < lpsi_num; pos++ ) {
+            Size_t remain_num = 0;
+            for ( Size_t pos = 0; pos < lpsi_num; pos++ ) {
                 if ( pos > 0 && utf16_strcmp ( lpsis[pos].str, lpsis[pos - 1].str ) == 0 ) {
                     if ( lpsis[pos].lpi.psb < lpsis[pos - 1].lpi.psb ) {
                         assert ( remain_num > 0 );
@@ -1502,14 +1501,14 @@ namespace ime_pinyin {
             // example, "de" and "di" are all valid for a Chinese character, so when
             // the user input  "d", repeated items are generated.
             // For single character lemmas, Hanzis will be gotten
-            for ( size_t pos = 0; pos < num; pos++ ) {
+            for ( Size_t pos = 0; pos < num; pos++ ) {
                 char16 hanzis[2];
                 get_lemma_str ( lma_buf[pos].id, hanzis, 2 );
                 lma_buf[pos].hanzi = hanzis[0];
             }
             myqsort ( lma_buf, num, sizeof ( LmaPsbItem ), cmp_lpi_with_hanzi );
-            size_t remain_num = 0;
-            for ( size_t pos = 0; pos < num; pos++ ) {
+            Size_t remain_num = 0;
+            for ( Size_t pos = 0; pos < num; pos++ ) {
                 if ( pos > 0 && lma_buf[pos].hanzi == lma_buf[pos - 1].hanzi ) {
                     if ( NULL != pfullsent &&
                          static_cast<char16> ( 0 ) == pfullsent[1] &&
@@ -1597,20 +1596,20 @@ namespace ime_pinyin {
         return splid_num;
     }
 
-    size_t MatrixSearch::inner_predict ( const char16 *fixed_buf, uint16 fixed_len,
+    Size_t MatrixSearch::inner_predict ( const char16 *fixed_buf, uint16 fixed_len,
                                          char16 predict_buf[][kMaxPredictSize + 1],
-                                         size_t buf_len ) {
-        size_t res_total = 0;
+                                         Size_t buf_len ) {
+        Size_t res_total = 0;
         memset ( npre_items_, 0, sizeof ( NPredictItem ) * npre_items_len_ );
         // In order to shorten the comments, j-character candidates predicted by
         // i-character prefix are called P(i,j). All candiates predicted by
         // i-character prefix are called P(i,*)
         // Step 1. Get P(kMaxPredictSize, *) and sort them, here
         // P(kMaxPredictSize, *) == P(kMaxPredictSize, 1)
-        for ( size_t len = fixed_len; len > 0; len-- ) {
+        for ( Size_t len = fixed_len; len > 0; len-- ) {
             // How many blank items are available
-            size_t this_max = npre_items_len_ - res_total;
-            size_t res_this;
+            Size_t this_max = npre_items_len_ - res_total;
+            Size_t res_this;
             // If the history is longer than 1, and we can not get prediction from
             // lemmas longer than 2, in this case, we will add lemmas with
             // highest scores as the prediction result.
@@ -1618,7 +1617,7 @@ namespace ime_pinyin {
                 // Try to find if recent n (n>1) characters can be a valid lemma in system
                 // dictionary.
                 bool nearest_n_word = false;
-                for ( size_t nlen = 2; nlen <= fixed_len; nlen++ ) {
+                for ( Size_t nlen = 2; nlen <= fixed_len; nlen++ ) {
                     if ( dict_trie_->get_lemma_id ( fixed_buf + fixed_len - nlen, nlen ) > 0 ) {
                         nearest_n_word = true;
                         break;
@@ -1673,16 +1672,16 @@ namespace ime_pinyin {
         }
         if ( kPrintDebug2 ) {
             printf ( "/////////////////Predicted Items Begin////////////////////>>\n" );
-            for ( size_t i = 0; i < res_total; i++ ) {
+            for ( Size_t i = 0; i < res_total; i++ ) {
                 printf ( "---" );
-                for ( size_t j = 0; j < kMaxPredictSize; j++ ) {
+                for ( Size_t j = 0; j < kMaxPredictSize; j++ ) {
                     printf ( "%d  ", npre_items_[i].pre_hzs[j] );
                 }
                 printf ( "\n" );
             }
             printf ( "<<///////////////Predicted Items End////////////////////////\n" );
         }
-        for ( size_t i = 0; i < res_total; i++ ) {
+        for ( Size_t i = 0; i < res_total; i++ ) {
             utf16_strncpy ( predict_buf[i], npre_items_[i].pre_hzs,
                             kMaxPredictSize );
             predict_buf[i][kMaxPredictSize] = '\0';
@@ -1690,10 +1689,10 @@ namespace ime_pinyin {
         return res_total;
     }
 
-    size_t MatrixSearch::get_predicts ( const char16 fixed_buf[],
+    Size_t MatrixSearch::get_predicts ( const char16 fixed_buf[],
                                         char16 predict_buf[][kMaxPredictSize + 1],
-                                        size_t buf_len ) {
-        size_t fixed_len = utf16_strlen ( fixed_buf );
+                                        Size_t buf_len ) {
+        Size_t fixed_len = utf16_strlen ( fixed_buf );
         if ( 0 == fixed_len || fixed_len > kMaxPredictSize || 0 == buf_len )
         { return 0; }
         return inner_predict ( fixed_buf, fixed_len, predict_buf, buf_len );

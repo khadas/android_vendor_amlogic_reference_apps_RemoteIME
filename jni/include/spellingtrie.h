@@ -39,7 +39,7 @@ namespace ime_pinyin {
     class SpellingTrie {
         private:
             static const int kMaxYmNum = 64;
-            static const size_t kValidSplCharNum = 26;
+            static const Size_t kValidSplCharNum = 26;
 
             static const uint16 kHalfIdShengmuMask = 0x01;
             static const uint16 kHalfIdYunmuMask = 0x02;
@@ -80,8 +80,8 @@ namespace ime_pinyin {
             // The Yunmu table.
             // Each Yunmu will be assigned with Yunmu id from 1.
             char *ym_buf_;
-            size_t ym_size_;  // The size of longest Yunmu string, '\0'included.
-            size_t ym_num_;
+            Size_t ym_size_;  // The size of longest Yunmu string, '\0'included.
+            Size_t ym_num_;
 
             // The spelling string just queried
             char *splstr_queried_;
@@ -116,7 +116,7 @@ namespace ime_pinyin {
 
 #ifdef ___BUILD_MODEL___
             // How many node used to build the trie.
-            size_t node_num_;
+            Size_t node_num_;
 #endif
 
             SpellingTrie();
@@ -127,8 +127,8 @@ namespace ime_pinyin {
             // item_star to item_end).
             // Member spelliing_buf_ and spelling_size_ should be valid.
             // parent is used to update its num_of_son and score.
-            SpellingNode *construct_spellings_subset ( size_t item_start, size_t item_end,
-                                                       size_t level, SpellingNode *parent );
+            SpellingNode *construct_spellings_subset ( Size_t item_start, Size_t item_end,
+                                                       Size_t level, SpellingNode *parent );
             bool build_f2h();
 
             // The caller should guarantee ch >= 'A' && ch <= 'Z'
@@ -168,7 +168,7 @@ namespace ime_pinyin {
             // score_amplifier is used to convert a possibility value into score.
             // average_score is the average_score of all spellings. The dumb node is
             // assigned with this score.
-            bool construct ( const char *spelling_arr, size_t item_size, size_t item_num,
+            bool construct ( const char *spelling_arr, Size_t item_size, Size_t item_num,
                              float score_amplifier, unsigned char average_score );
 
             // Test if the given id is a valid spelling id.
@@ -236,7 +236,7 @@ namespace ime_pinyin {
             bool load_spl_trie ( FILE *fp );
 
             // Get the number of spellings
-            size_t get_spelling_num();
+            Size_t get_spelling_num();
 
             // Return the Yunmu id for the given Yunmu string.
             // If the string is not valid, return 0;
@@ -250,8 +250,8 @@ namespace ime_pinyin {
 
             // Get Pinyin string for a given spelling id. Return the length of the
             // string, and fill-in '\0' at the end.
-            size_t get_spelling_str16 ( uint16 splid, char16 *splstr16,
-                                        size_t splstr16_len );
+            Size_t get_spelling_str16 ( uint16 splid, char16 *splstr16,
+                                        Size_t splstr16_len );
     };
 }
 
