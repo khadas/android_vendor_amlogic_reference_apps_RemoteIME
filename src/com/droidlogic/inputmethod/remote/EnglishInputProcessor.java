@@ -25,12 +25,19 @@ import android.view.inputmethod.InputConnection;
 public class EnglishInputProcessor {
 
         private int mLastKeyCode = KeyEvent.KEYCODE_UNKNOWN;
+        private boolean mShiftTag = false;
+
         public boolean processKey ( InputConnection inputContext, KeyEvent event,
                                     boolean upperCase, boolean realAction ) {
             if ( null == inputContext || null == event ) { return false; }
             int keyCode = event.getKeyCode();
             CharSequence prefix = null;
             prefix = inputContext.getTextBeforeCursor ( 2, 0 );
+
+            if (!realAction && keyCode == KeyEvent.KEYCODE_SHIFT_LEFT) {
+                mShiftTag = true;
+            }
+
             int keyChar;
             keyChar = 0;
             if ( keyCode >= KeyEvent.KEYCODE_A && keyCode <= KeyEvent.KEYCODE_Z ) {
@@ -53,6 +60,11 @@ public class EnglishInputProcessor {
             } else if ( keyCode == KeyEvent.KEYCODE_AT ) {
                 keyChar = '@';
             } else if ( keyCode == KeyEvent.KEYCODE_SLASH ) { keyChar = '/'; }
+
+            if (mShiftTag) {
+                keyChar = 0;
+            }
+
             if ( 0 == keyChar ) {
                 mLastKeyCode = keyCode;
                 String insert = null;
@@ -75,6 +87,12 @@ public class EnglishInputProcessor {
             if ( !realAction ) {
                 return true;
             }
+
+            if (realAction && keyCode == KeyEvent.KEYCODE_SHIFT_LEFT) {
+                mShiftTag = false;
+                mLastKeyCode = KeyEvent.KEYCODE_UNKNOWN;
+            }
+
             if ( KeyEvent.KEYCODE_SHIFT_LEFT == mLastKeyCode
                     || KeyEvent.KEYCODE_SHIFT_LEFT == mLastKeyCode ) {
                 if ( keyChar >= 'a' && keyChar <= 'z' ) {
