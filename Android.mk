@@ -11,6 +11,10 @@ LOCAL_PACKAGE_NAME := RemoteIME
 LOCAL_JAVA_LIBRARIES := droidlogic
 LOCAL_REQUIRED_MODULES := libjni_remoteime
 
+ifeq ($(shell test $(PLATFORM_SDK_VERSION) -ge 26 && echo OK),OK)
+LOCAL_PROPRIETARY_MODULE := true
+endif
+
 LOCAL_STATIC_JAVA_LIBRARIES := com.droidlogic.inputmethod.remote.lib
 
 LOCAL_CERTIFICATE := shared
