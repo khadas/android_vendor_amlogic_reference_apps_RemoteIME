@@ -8,7 +8,6 @@ LOCAL_SRC_FILES := \
          $(call all-subdir-java-files)
 
 LOCAL_PACKAGE_NAME := RemoteIME
-LOCAL_JAVA_LIBRARIES := droidlogic
 LOCAL_REQUIRED_MODULES := libjni_remoteime
 
 ifeq ($(shell test $(PLATFORM_SDK_VERSION) -ge 26 && echo OK),OK)

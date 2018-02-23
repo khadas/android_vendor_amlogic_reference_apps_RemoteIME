@@ -18,9 +18,9 @@ package com.droidlogic.inputmethod.remote;
 
 import android.content.Context;
 import android.content.res.Configuration;
+import android.os.SystemProperties;
 import android.view.Display;
 import android.view.WindowManager;
-import com.droidlogic.app.SystemControlManager;
 
 /**
  * Global environment configurations for showing soft keyboard and candidate
@@ -117,8 +117,7 @@ public class Environment {
 
         public void onConfigurationChanged ( Configuration newConfig, Context context ) {
             //density and display-size will be change when switch outputmode between 1080 and 720, need to update configuration
-            SystemControlManager sw =  new SystemControlManager ( context );
-            if ( ( mConfig.orientation != newConfig.orientation ) || ( sw.getPropertyBoolean ( "ro.platform.has.realoutputmode", false ) ) ) {
+            if ((mConfig.orientation != newConfig.orientation ) || (SystemProperties.getBoolean("ro.platform.has.realoutputmode", false))) {
                 WindowManager wm = ( WindowManager ) context.getSystemService ( Context.WINDOW_SERVICE );
                 Display d = wm.getDefaultDisplay();
                 mScreenWidth = d.getWidth();

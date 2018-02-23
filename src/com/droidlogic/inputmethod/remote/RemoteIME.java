@@ -30,6 +30,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.RemoteException;
+import android.os.SystemProperties;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Gravity;
@@ -52,7 +53,6 @@ import android.widget.PopupWindow;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
-import com.droidlogic.app.SystemControlManager;
 
 /**
  * Main class of the Pinyin input method.
@@ -175,7 +175,6 @@ public class RemoteIME extends InputMethodService {
         private Boolean mEnterEnabled;
 
         private Boolean mShiftTag = false;
-        private SystemControlManager sw = null;
         // receive ringer mode changes
         private BroadcastReceiver mReceiver = new BroadcastReceiver() {
             @Override
@@ -205,7 +204,6 @@ public class RemoteIME extends InputMethodService {
                     mGestureListenerCandidates );
             mEnvironment.onConfigurationChanged ( getResources().getConfiguration(),
                                                   this );
-            sw = new SystemControlManager ( this );
         }
 
         @Override
@@ -242,7 +240,7 @@ public class RemoteIME extends InputMethodService {
                 super.onConfigurationChanged ( newConfig );
             }
             //density and display-size will be change when switch outputmode between 1080 and 720, need to update configuration
-            if ( sw.getPropertyBoolean ( "ro.platform.has.realoutputmode", false ) ) {
+            if (SystemProperties.getBoolean("ro.platform.has.realoutputmode", false)) {
                 super.onConfigurationChanged ( newConfig );
             }
             resetToIdleState ( false );

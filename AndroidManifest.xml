@@ -23,7 +23,6 @@
     android:killAfterRestore="false"
     android:label="@string/ime_name">
 
-    <uses-library android:name="droidlogic.software.core" />
     <service android:name=".PinyinDecoderService" android:exported="true">
       <intent-filter>
         <action android:name="com.android.inputmethod.pinyin.Decoder_Service" />
