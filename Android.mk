@@ -9,6 +9,7 @@ LOCAL_SRC_FILES := \
 
 LOCAL_PACKAGE_NAME := RemoteIME
 LOCAL_REQUIRED_MODULES := libjni_remoteime
+#LOCAL_JNI_SHARED_LIBRARIES := libjni_remoteime
 
 ifeq ($(shell test $(PLATFORM_SDK_VERSION) -ge 26 && echo OK),OK)
 LOCAL_PROPRIETARY_MODULE := true
@@ -16,7 +17,7 @@ endif
 
 LOCAL_STATIC_JAVA_LIBRARIES := com.droidlogic.inputmethod.remote.lib
 
-LOCAL_CERTIFICATE := shared
+#LOCAL_CERTIFICATE := shared
 
 # Make sure our dictionary file is not compressed, so we can read it with
 # a raw file descriptor.
@@ -25,6 +26,9 @@ LOCAL_AAPT_FLAGS := -0 .dat
 LOCAL_PROGUARD_ENABLED := disabled
 
 LOCAL_PRIVATE_PLATFORM_APIS := true
+
+# Install it to vendor/priv-app
+#LOCAL_PRIVILEGED_MODULE := true
 
 include $(BUILD_PACKAGE)
 include $(call all-makefiles-under,$(LOCAL_PATH))
