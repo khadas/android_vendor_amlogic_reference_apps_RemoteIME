@@ -13,7 +13,7 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.droidlogic.inputmethod.remote" >
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.droidlogic.inputmethod.remote" android:sharedUserId="android.uid.shared">
   <original-package android:name="com.amlogic.inputmethod.remote" />
   <uses-permission android:name="android.permission.VIBRATE" />
   <application

@@ -132,7 +132,7 @@ public class SkbContainer extends RelativeLayout implements OnTouchListener {
         private int mPopupX;
 
         private int mPopupY;
-
+        private Context mContext;
         /**
          * When user presses a key, a timer is started, when it times out, it is
          * necessary to detect whether user still holds the key.
@@ -202,6 +202,7 @@ public class SkbContainer extends RelativeLayout implements OnTouchListener {
 
         public SkbContainer ( Context context, AttributeSet attrs ) {
             super ( context, attrs );
+            mContext = context;
             mEnvironment = Environment.getInstance();
             mLongPressTimer = new LongPressTimer ( this );
             // If it runs on an emulator, no bias correction

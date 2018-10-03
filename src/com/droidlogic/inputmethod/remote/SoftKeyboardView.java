@@ -101,10 +101,8 @@ public class SoftKeyboardView extends View {
         private boolean mMovingNeverHidePopupBalloon = false;
 
         /** Vibration for key press. */
-        private Vibrator mVibrator;
 
         /** Vibration pattern for key press. */
-        protected long[] mVibratePattern = new long[] {1, 20};
 
         /**
          * The dirty rectangle used to mark the area to re-draw during key press and
@@ -123,7 +121,7 @@ public class SoftKeyboardView extends View {
 
         public SoftKeyboardView ( Context context, AttributeSet attrs ) {
             super ( context, attrs );
-            mSoundManager = SoundManager.getInstance ( mContext );
+            mSoundManager = SoundManager.getInstance ( context );
             mPaint = new Paint();
             mPaint.setAntiAlias ( true );
             mFmi = mPaint.getFontMetricsInt();
@@ -166,8 +164,8 @@ public class SoftKeyboardView extends View {
             if ( null != mSoftKeyboard ) {
                 measuredWidth = mSoftKeyboard.getSkbCoreWidth();
                 measuredHeight = mSoftKeyboard.getSkbCoreHeight();
-                measuredWidth += mPaddingLeft + mPaddingRight;
-                measuredHeight += mPaddingTop + mPaddingBottom;
+                measuredWidth += getPaddingLeft() + getPaddingRight();
+                measuredHeight += getPaddingTop() + getPaddingBottom();
             }
             setMeasuredDimension ( measuredWidth, measuredHeight );
         }
@@ -225,7 +223,6 @@ public class SoftKeyboardView extends View {
             mKeyPressed = true;
             if ( !movePress ) {
                 tryPlayKeyDown();
-                tryVibrate();
             }
             mLongPressTimer = longPressTimer;
             if ( !movePress ) {
@@ -258,10 +255,10 @@ public class SoftKeyboardView extends View {
                                                      textSize, true, mSoftKeyDown.getColorHl(),
                                                      desired_width, desired_height );
                 }
-                mHintLocationToSkbContainer[0] = mPaddingLeft + mSoftKeyDown.mLeft
+                mHintLocationToSkbContainer[0] = getPaddingLeft() + mSoftKeyDown.mLeft
                                                  - ( mBalloonOnKey.getWidth() - mSoftKeyDown.width() ) / 2;
                 mHintLocationToSkbContainer[0] += mOffsetToSkbContainer[0];
-                mHintLocationToSkbContainer[1] = mPaddingTop
+                mHintLocationToSkbContainer[1] = getPaddingTop()
                                                  + ( mSoftKeyDown.mBottom - keyYMargin )
                                                  - mBalloonOnKey.getHeight();
                 mHintLocationToSkbContainer[1] += mOffsetToSkbContainer[1];
@@ -291,10 +288,10 @@ public class SoftKeyboardView extends View {
                                                      desired_height );
                 }
                 // The position to show.
-                mHintLocationToSkbContainer[0] = mPaddingLeft + mSoftKeyDown.mLeft
+                mHintLocationToSkbContainer[0] = getPaddingLeft() + mSoftKeyDown.mLeft
                                                  + - ( mBalloonPopup.getWidth() - mSoftKeyDown.width() ) / 2;
                 mHintLocationToSkbContainer[0] += mOffsetToSkbContainer[0];
-                mHintLocationToSkbContainer[1] = mPaddingTop + mSoftKeyDown.mTop
+                mHintLocationToSkbContainer[1] = getPaddingTop() + mSoftKeyDown.mTop
                                                  - mBalloonPopup.getHeight();
                 mHintLocationToSkbContainer[1] += mOffsetToSkbContainer[1];
                 showBalloon ( mBalloonPopup, mHintLocationToSkbContainer, movePress );
@@ -319,7 +316,7 @@ public class SoftKeyboardView extends View {
             if ( mSoftKeyDown.needBalloon() ) {
                 mBalloonPopup.delayedDismiss ( BalloonHint.TIME_DELAY_DISMISS );
             }
-            if ( mSoftKeyDown.moveWithinKey ( x - mPaddingLeft, y - mPaddingTop ) ) {
+            if ( mSoftKeyDown.moveWithinKey ( x - getPaddingLeft(), y - getPaddingTop() ) ) {
                 return mSoftKeyDown;
             }
             return null;
@@ -327,7 +324,7 @@ public class SoftKeyboardView extends View {
 
         public SoftKey onKeyMove ( int x, int y ) {
             if ( null == mSoftKeyDown ) { return null; }
-            if ( mSoftKeyDown.moveWithinKey ( x - mPaddingLeft, y - mPaddingTop ) ) {
+            if ( mSoftKeyDown.moveWithinKey ( x - getPaddingLeft(), y - getPaddingTop() ) ) {
                 return mSoftKeyDown;
             }
             // The current key needs to be updated.
@@ -355,15 +352,6 @@ public class SoftKeyboardView extends View {
             }
         }
 
-        private void tryVibrate() {
-            if ( !Settings.getVibrate() ) {
-                return;
-            }
-            if ( mVibrator == null ) {
-                mVibrator = new Vibrator();
-            }
-            mVibrator.vibrate ( mVibratePattern, -1 );
-        }
 
         private void tryPlayKeyDown() {
             if ( Settings.getKeySound() ) {
@@ -386,7 +374,7 @@ public class SoftKeyboardView extends View {
         @Override
         protected void onDraw ( Canvas canvas ) {
             if ( null == mSoftKeyboard ) { return; }
-            canvas.translate ( mPaddingLeft, mPaddingTop );
+            canvas.translate ( getPaddingLeft(), getPaddingTop() );
             Environment env = Environment.getInstance();
             mNormalKeyTextSize = env.getKeyTextSize ( false );
             mFunctionKeyTextSize = env.getKeyTextSize ( true );

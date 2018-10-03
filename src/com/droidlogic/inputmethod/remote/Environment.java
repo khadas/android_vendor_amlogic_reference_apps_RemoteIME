@@ -117,7 +117,7 @@ public class Environment {
 
         public void onConfigurationChanged ( Configuration newConfig, Context context ) {
             //density and display-size will be change when switch outputmode between 1080 and 720, need to update configuration
-            if ((mConfig.orientation != newConfig.orientation ) || (SystemProperties.getBoolean("ro.platform.has.realoutputmode", false))) {
+            if ((mConfig.orientation != newConfig.orientation ) || (SystemProperties.getBoolean("ro.vendor.platform.has.realoutputmode", false))) {
                 WindowManager wm = ( WindowManager ) context.getSystemService ( Context.WINDOW_SERVICE );
                 Display d = wm.getDefaultDisplay();
                 mScreenWidth = d.getWidth();

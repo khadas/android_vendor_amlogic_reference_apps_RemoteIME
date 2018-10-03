@@ -240,7 +240,7 @@ public class RemoteIME extends InputMethodService {
                 super.onConfigurationChanged ( newConfig );
             }
             //density and display-size will be change when switch outputmode between 1080 and 720, need to update configuration
-            if (SystemProperties.getBoolean("ro.platform.has.realoutputmode", false)) {
+            if (SystemProperties.getBoolean("ro.vendor.platform.has.realoutputmode", false)) {
                 super.onConfigurationChanged ( newConfig );
             }
             resetToIdleState ( false );
@@ -1261,20 +1261,15 @@ public class RemoteIME extends InputMethodService {
             builder.setIcon ( R.drawable.app_icon );
             builder.setNegativeButton ( android.R.string.cancel, null );
             CharSequence itemSettings = getString ( R.string.ime_settings_activity_name );
-            CharSequence itemInputMethod = getString ( com.android.internal.R.string.inputMethod );
-            builder.setItems ( new CharSequence[] {itemSettings, itemInputMethod},
+            builder.setItems ( new CharSequence[] {itemSettings},
             new DialogInterface.OnClickListener() {
                 public void onClick ( DialogInterface di, int position ) {
                     di.dismiss();
                     switch ( position ) {
                         case 0:
                             launchSettings();
-                            break;
-                        case 1:
                             //InputMethodManager.getInstance(RemoteIME.this)
                             //        .showInputMethodPicker();
-                            InputMethodManager.getInstance()
-                            .showInputMethodPicker();
                             break;
                     }
                 }
