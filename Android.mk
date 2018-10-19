@@ -24,7 +24,9 @@ LOCAL_AAPT_FLAGS := -0 .dat
 
 LOCAL_PROGUARD_ENABLED := disabled
 
-#LOCAL_PRIVATE_PLATFORM_APIS := true
+ifndef PRODUCT_SHIPPING_API_LEVEL
+LOCAL_PRIVATE_PLATFORM_APIS := true
+endif
 
 include $(BUILD_PACKAGE)
 include $(call all-makefiles-under,$(LOCAL_PATH))
