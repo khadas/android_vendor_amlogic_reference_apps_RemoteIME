@@ -29,7 +29,7 @@
         <category android:name="android.intent.category.DEFAULT" />
       </intent-filter>
     </service>
-    <service android:name=".RemoteIME" android:label="@string/ime_name" android:permission="android.permission.BIND_INPUT_METHOD">
+    <service android:name=".RemoteIME" android:label="@string/ime_name" android:permission="android.permission.BIND_INPUT_METHOD" android:directBootAware="true">
       <intent-filter>
         <action android:name="android.view.InputMethod" />
       </intent-filter>

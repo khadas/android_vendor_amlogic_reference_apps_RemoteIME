@@ -16,6 +16,7 @@
 
 package com.droidlogic.inputmethod.remote;
 
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -24,9 +25,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.inputmethodservice.InputMethodService;
 import android.os.Bundle;
+import android.os.Build;
+import android.os.Build.VERSION;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.RemoteException;
@@ -183,6 +187,26 @@ public class RemoteIME extends InputMethodService {
             }
         };
 
+        /**
+         * Returns the default {@link SharedPreferences} instance from the underlying storage context.
+         */
+        @TargetApi(Build.VERSION_CODES.N)
+        private static SharedPreferences getDefaultSharedPreferences(Context context) {
+            final Context storageContext;
+            if (VERSION.SDK_INT >= 24) {
+                // All N devices have split storage areas. Migrate the existing preferences into the new
+                // device encrypted storage area if that has not yet occurred.
+                final String name = PreferenceManager.getDefaultSharedPreferencesName(context);
+                storageContext = context.createDeviceProtectedStorageContext();
+                if (!storageContext.moveSharedPreferencesFrom(context, name)) {
+                    Log.e(TAG, "Failed to migrate shared preferences");
+                }
+            } else {
+                storageContext = context;
+            }
+            return PreferenceManager.getDefaultSharedPreferences(storageContext);
+        }
+
         @Override
         public void onCreate() {
             mEnvironment = Environment.getInstance();
@@ -193,8 +217,7 @@ public class RemoteIME extends InputMethodService {
             mEnterEnabled = getBaseContext().getResources().getBoolean ( R.bool.is_enableEnter );
             startPinyinDecoderService();
             mImEn = new EnglishInputProcessor();
-            Settings.getInstance ( PreferenceManager
-                                   .getDefaultSharedPreferences ( getApplicationContext() ) );
+            Settings.getInstance(getDefaultSharedPreferences(getApplicationContext()));
             mInputModeSwitcher = new InputModeSwitcher ( this );
             mChoiceNotifier = new ChoiceNotifier ( this );
             mGestureListenerSkb = new OnGestureListener ( false );

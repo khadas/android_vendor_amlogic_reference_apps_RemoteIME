@@ -206,7 +206,7 @@ public class SkbContainer extends RelativeLayout implements OnTouchListener {
             mEnvironment = Environment.getInstance();
             mLongPressTimer = new LongPressTimer ( this );
             // If it runs on an emulator, no bias correction
-            if ( "1".equals ( SystemProperties.get ( "ro.kernel.qemu" ) ) ) {
+            if ( "1".equals ( SystemProperties.get ( "ro.boot.qemu" ) ) ) {
                 mYBiasCorrection = 0;
                 mYBiasCorrection = 0;
             } else {
