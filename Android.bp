@@ -14,7 +14,7 @@ android_app {
 
     srcs: ["**/*.java"],
 
-    required: ["libjni_remoteime"],
+    jni_libs: ["libjni_remoteime"],
 
     //ifeq ($(shell test $(PLATFORM_SDK_VERSION) -ge 26 && echo OK),OK)
     proprietary: true,
