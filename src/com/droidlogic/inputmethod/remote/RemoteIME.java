@@ -217,7 +217,8 @@ public class RemoteIME extends InputMethodService {
             mEnterEnabled = getBaseContext().getResources().getBoolean ( R.bool.is_enableEnter );
             startPinyinDecoderService();
             mImEn = new EnglishInputProcessor();
-            Settings.getInstance(getDefaultSharedPreferences(getApplicationContext()));
+            Settings.getInstance (this.getSharedPreferences(Settings.HARED_PREF_DVR_WATCHED_POSITION,
+                    Context.MODE_PRIVATE));
             mInputModeSwitcher = new InputModeSwitcher ( this );
             mChoiceNotifier = new ChoiceNotifier ( this );
             mGestureListenerSkb = new OnGestureListener ( false );

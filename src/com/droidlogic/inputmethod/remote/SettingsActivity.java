@@ -26,9 +26,11 @@ import android.preference.PreferenceGroup;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
 
+import android.util.Log;
 import com.droidlogic.inputmethod.remote.Settings;
 
 import android.content.Intent;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 
@@ -51,13 +53,25 @@ public class SettingsActivity extends PreferenceActivity implements
             PreferenceScreen prefSet = getPreferenceScreen();
             mKeySoundPref = ( CheckBoxPreference ) prefSet
                             .findPreference ( getString ( R.string.setting_sound_key ) );
+            if ( mKeySoundPref != null ) {
+                mKeySoundPref.setOnPreferenceChangeListener(this);
+            }
+
             mVibratePref = ( CheckBoxPreference ) prefSet
                            .findPreference ( getString ( R.string.setting_vibrate_key ) );
+            if ( mVibratePref != null ) {
+                mVibratePref.setOnPreferenceChangeListener(this);
+            }
+
             mPredictionPref = ( CheckBoxPreference ) prefSet
                               .findPreference ( getString ( R.string.setting_prediction_key ) );
+            if ( mPredictionPref != null ) {
+                mPredictionPref.setOnPreferenceChangeListener(this);
+            }
+
             prefSet.setOnPreferenceChangeListener ( this );
-            Settings.getInstance ( PreferenceManager
-                                   .getDefaultSharedPreferences ( getApplicationContext() ) );
+            Settings.getInstance (this.getSharedPreferences(Settings.HARED_PREF_DVR_WATCHED_POSITION,
+                    Context.MODE_PRIVATE));
             updatePreference ( prefSet, getString ( R.string.setting_advanced_key ) );
             updateWidgets();
         }
@@ -74,18 +88,20 @@ public class SettingsActivity extends PreferenceActivity implements
             super.onDestroy();
         }
 
-        @Override
-        protected void onPause() {
-            super.onPause();
-            Settings.setKeySound ( mKeySoundPref.isChecked() );
-            Settings.setVibrate ( mVibratePref.isChecked() );
-            Settings.setPrediction ( mPredictionPref.isChecked() );
-            Settings.writeBack();
+    @Override
+    public boolean onPreferenceChange(Preference preference, Object newValue) {
+        Log.d(TAG, "onPreferenceChange, " + (boolean) newValue);
+        boolean isChecked = (boolean) newValue;
+        if (preference.getKey().equals(getString(R.string.setting_sound_key))) {
+            Settings.setKeySound(isChecked);
+        } else if (preference.getKey().equals(getString(R.string.setting_vibrate_key))) {
+            Settings.setVibrate(isChecked);
+        }else if (preference.getKey().equals(getString(R.string.setting_prediction_key))) {
+            Settings.setPrediction(isChecked);
         }
-
-        public boolean onPreferenceChange ( Preference preference, Object newValue ) {
-            return true;
-        }
+        Settings.writeBack();
+        return true;
+    }
 
         private void updateWidgets() {
             mKeySoundPref.setChecked ( Settings.getKeySound() );
