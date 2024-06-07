@@ -1041,6 +1041,7 @@ public class RemoteIME extends InputMethodService {
             mFloatingWindow.setInputMethodMode ( PopupWindow.INPUT_METHOD_NOT_NEEDED );
             mFloatingWindow.setContentView ( mFloatingContainer );
             setCandidatesViewShown ( true );
+            setExtractViewShown(false);
             return mCandidatesContainer;
         }
 
